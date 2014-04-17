@@ -65,7 +65,7 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_HOOK_AUTHOR'			=> 'Author',
 	'ACP_PHPBB_API_HOOK_DATE'			=> 'Date',
 	'ACP_PHPBB_API_HOOK_DELETED'		=> 'The hook %s has been deleted from the server',
-	'ACP_PHPBB_API_HOOK_DELETE_ERR'		=> 'Cannot delete an non-uninstalled hook!',
+	'ACP_PHPBB_API_HOOK_DELETE_ERR'		=> 'Cannot delete a non-uninstalled hook!',
 	'ACP_PHPBB_API_HOOK_FILE'			=> 'File',
 	'ACP_PHPBB_API_HOOK_INSTALL'		=> 'Install',
 	'ACP_PHPBB_API_HOOK_INSTALLED'		=> 'Installed hooks',
@@ -78,7 +78,7 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_HOOK_VERSION'		=> 'Version',
 
 //API's Stats
-	'ACP_PHPBB_API_STATS_ALL_QR'	=> 'Count of queries',
+	'ACP_PHPBB_API_STATS_ALL_QR'	=> 'Query count',
 	'ACP_PHPBB_API_STATS_DAY'		=> 'Daily statistics',
 	'ACP_PHPBB_API_STATS_DAY_EXP'	=> 'Click on a daily item above for more details.',
 	'ACP_PHPBB_API_STATS_DAY_FMT'	=> '{monthstr} {daystr} {dayint}th  {yearint}',//April Thursday 7th 2013// This is not translatable, you can only re-order this depending your language
@@ -146,9 +146,9 @@ $lang = array_merge($lang, array(
 
 	'ACP_PHPBB_API_BACKTRACE'			=> 'Enable API backtrace',
 	'ACP_PHPBB_API_BACKTRACE_EXP'		=> 'That feature allows you to trace potential errors of the API.
-											<br />Note that only administrator keys have the privilege to see exceptions in API response. In every instance, the exceptions will be still logged in logs',
-	'ACP_PHPBB_API_BAN_RECORDED'		=> '%d expired ban recorded',
-	'ACP_PHPBB_API_BANS_RECORDED'		=> '%d expired bans recorded',
+											<br />Note that only administrator keys have the privilege to see exceptions in API responses. In every instance, exceptions will be still logged in logs.',
+	'ACP_PHPBB_API_BAN_RECORDED'		=> '%d expired ban found',
+	'ACP_PHPBB_API_BANS_RECORDED'		=> '%d expired bans found',
 
 	'ACP_PHPBB_API_CHANGE'				=> 'Change',
 	'ACP_PHPBB_API_CLOCK'				=> 'Clock',
@@ -159,9 +159,9 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_CREATE_EXP'			=> 'Create a new key',
 	'ACP_PHPBB_API_CREATION_DATE'		=> 'Creation date',
 	'ACP_PHPBB_API_CACHE_STATS'			=> 'Cache statistics',
-	'ACP_PHPBB_API_CACHE_STATS_EXP'		=> 'This option will allow you to cache the statistics to reduce server load, however these will only be updated every few hours.',
-	'ACP_PHPBB_API_CRON_TASK'			=> 'CRON tasks',
-	'ACP_PHPBB_API_CRON_TASK_EXP'		=> 'The CRON tasks send a periodic statistic report to all founders of the board and will partially clean the API.',
+	'ACP_PHPBB_API_CACHE_STATS_EXP'		=> 'This option will allow you to cache statistics to reduce server load, however these will only be updated every few hours.',
+	'ACP_PHPBB_API_CRON_TASK'			=> 'Cron task',
+	'ACP_PHPBB_API_CRON_TASK_EXP'		=> 'The Cron task sends a periodic statistic report to all founders of the board and will partially clean the API.',
 
 	'ACP_PHPBB_API_DB_CREDENTIALS'		=> 'Credentials data',
 	'ACP_PHPBB_API_DB_NO_CHANGE'		=> 'No change',
@@ -173,7 +173,7 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_DEACTIVATE'			=> 'Deactivate',
 	'ACP_PHPBB_API_DEACTIVATED_METHODS'	=> 'Deactivated methods',
 	'ACP_PHPBB_API_DEACTIVATED_METHODS_EXP'	=> 'You can deactivate multiple methods in one go using the appropriate combination of mouse and keyboard for your computer and browser.
-											<br />Please note that some methods are already administrator`s reserved. Check out the %1$smanual%2$s for more information.',
+											<br />Please note that some methods are already restricted to administrator use. Check out the %1$smanual%2$s for more information.',
 	'ACP_PHPBB_API_DEFAULT_SETTINGS'	=> 'Default settings',
 	'ACP_PHPBB_API_DELETE'				=> 'Delete',
 	'ACP_PHPBB_API_DELETED'				=> 'The key <strong>%s</strong> has been successfully deleted!',
@@ -184,8 +184,8 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_EXPIRATION_DATE'		=> 'Expiration date',
 
 	'ACP_PHPBB_API_FAQ_MULTI_COLUMN'	=> 'Multi-column FAQ',
-	'ACP_PHPBB_API_FATAL_HTML'			=> 'Show fatal errors as HTML format',
-	'ACP_PHPBB_API_FATAL_HTML_EXP'		=> 'If enabled, the API will attempt to format the PHP fatal errors as in HTML format instead of the user chosen output',
+	'ACP_PHPBB_API_FATAL_HTML'			=> 'Show fatal errors as HTML',
+	'ACP_PHPBB_API_FATAL_HTML_EXP'		=> 'If enabled, the API will try to format PHP fatal errors in HTML instead of the user chosen output',
 	'ACP_PHPBB_API_FORCE_LOGOUT'		=> 'Force logout',
 	'ACP_PHPBB_API_FORCE_LOGOUT_EXP'	=> 'For extra safety, each request to the API will be terminated by a session disconnection. However this requires two additional SQL queries per request.',
 	'ACP_PHPBB_API_FORCE_SSL'			=> 'Force SSL protocol',
@@ -195,13 +195,13 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_HEADER'				=> 'phpBB API Header',
 	'ACP_PHPBB_API_HEADER_EXP'			=> 'If enabled, the server will return an header “<em>X-Powered-By: phpBB API/%s</em>”',
 	'ACP_PHPBB_API_CRYPTO_ENABLED'		=> 'Enable cryptographic support',
-	'ACP_PHPBB_API_CRYPTO_ENABLED_EXP'	=> 'That will enable the cryptographic support, see the API knowledge base to read more.',
+	'ACP_PHPBB_API_CRYPTO_ENABLED_EXP'	=> 'That will enable the cryptographic support, see the API knowledge base for more information.',
 	'ACP_PHPBB_API_HOOKS'				=> 'Hooks management',
 	'ACP_PHPBB_API_HOOKS_EXPLAIN'		=> 'On this page you can manage API’s hooks, and also check last updates of them.',
 	'ACP_PHPBB_API_HOOKS_INSTALLED_ERR'	=> 'That hook is already installed, please uninstall it before to proceed to the resettlement.',
 	'ACP_PHPBB_API_HOOKS_UPLOAD_FAIL'	=> 'There was an error initializing the HOOK upload process.',
 	
-	'ACP_PHPBB_API_IGNORE_COUNTER'		=> 'Note that it is possible to ignore these limits using users’ permissions.',
+	'ACP_PHPBB_API_IGNORE_COUNTER'		=> 'Note that you can ignore these limits using users’ permissions.',
 
 	'ACP_PHPBB_API_KEYS'					=> 'Keys management',
 	'ACP_PHPBB_API_KEY_ASSIGNED'			=> 'Key assigned to',
@@ -233,16 +233,16 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_KEY_SELECT'			=> 'Select the key',
 	//Constants are unavailable here :/
 	'ACP_PHPBB_API_KEY_STATUS'			=> array(
-			1	=> 'Active Key',
-			2	=> 'Suspended Key',
-			3	=> 'Deactivated key',
+			1	=> 'Activated',
+			2	=> 'Suspended',
+			3	=> 'Deactivated',
 	),
 	'ACP_PHPBB_API_KEY_STATUS_EXP'		=> 'Key status',
 
 	'ACP_PHPBB_API_KEY_TIME_EXP'		=> '<strong>Important</strong>: To increase the accuracy of the hours and minutes, check the exactness of your time zone and daylight saving time!',
 	'ACP_PHPBB_API_KEY_TITLE'			=> 'Key',
 	'ACP_PHPBB_API_KEY_SECRET_KEY'		=> 'Secret key',
-	'ACP_PHPBB_API_KEY_SECRET_KEY_EXP'	=> 'The secret key is cryptographic-related, and only the user knows. However you can change it if needed.',
+	'ACP_PHPBB_API_KEY_SECRET_KEY_EXP'	=> 'The secret key is cryptographic-related, and only its owner can see it. However you can regenerate it if needed.',
 	'ACP_PHPBB_API_KEY_TOOLS'			=> 'Tools',
 	'ACP_PHPBB_API_KEY_TYPE_A'			=> 'Admin key',
 	'ACP_PHPBB_API_KEY_TYPE_U'			=> 'User key',
@@ -273,10 +273,10 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_ERR_LOGS_PURGE'		=> 'Purge',
 	'ACP_PHPBB_API_ERR_LOGS_PURGE_ERROR'=> 'Cannot purge the physical error log, file non-writable!',
 
-	'ACP_PHPBB_API_MAX_ATTEMPS'			=> 'Maximum number of key attempts per IP address',
-	'ACP_PHPBB_API_MAX_ATTEMPS_EXP'		=> 'The threshold of key attempts allowed from a single IP address before a temporary kick of the API is triggered. Enter 0 to prevent the temporary kick from being triggered by IP addresses.',
-	'ACP_PHPBB_API_MAX_ATTEMPS_TIME' 	=> 'IP address key attempt expiration time',
-	'ACP_PHPBB_API_MAX_ATTEMPS_TIME_EXP'=> 'Key attempts expire after this period.',
+	'ACP_PHPBB_API_MAX_ATTEMPS'			=> 'Maximum number of invalid key attempts per IP address',
+	'ACP_PHPBB_API_MAX_ATTEMPS_EXP'		=> 'The threshold of invalid key attempts allowed from a single IP address before a temporary ban of the API is triggered. Enter 0 to prevent the temporary ban from being triggered.',
+	'ACP_PHPBB_API_MAX_ATTEMPS_TIME' 	=> 'Invalid key attempt reset time',
+	'ACP_PHPBB_API_MAX_ATTEMPS_TIME_EXP'=> 'Time interval after which invalid key attempt count will be reset.',
 	'ACP_PHPBB_API_MAX_QUERIES'			=> 'Maximum total number of requests',
 	'ACP_PHPBB_API_MAX_QUERIES_SHORT'	=> 'Max. requests',
 	'ACP_PHPBB_API_MOD'					=> 'Enable phpBB API',
@@ -291,9 +291,9 @@ $lang = array_merge($lang, array(
 
 	'ACP_PHPBB_API_OPERATION_SUCCESS'	=> 'Operation terminated successfully.',
 	'ACP_PHPBB_API_ORIGIN_HEADER'		=> 'Same-origin policy',
-	'ACP_PHPBB_API_ORIGIN_HEADER_EXP'	=> 'If enabled the API will return a same-origin header, which mean that the API will be protected against most CSRF exploits.',
+	'ACP_PHPBB_API_ORIGIN_HEADER_EXP'	=> 'If enabled the API will return a same-origin header, which means that the API will be protected against most CSRF exploits.',
 
-	'ACP_PHPBB_API_PAGINATION'			=> 'Number of element per page',
+	'ACP_PHPBB_API_PAGINATION'			=> 'Number of elements per page',
 	'ACP_PHPBB_API_PAGINATION_KEY'		=> '%s key',
 	'ACP_PHPBB_API_PAGINATION_KEYS'		=> '%s keys',
 	'ACP_PHPBB_API_PCHART_CHECK'		=> 'Check pChart installation',
@@ -319,21 +319,21 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_STAT_LIMIT'			=> 'Number of events displayed in the statistics',
 	'ACP_PHPBB_API_STATS'				=> 'Statistics',
 	'ACP_PHPBB_API_SUSPEND'				=> 'Suspend',
-	'ACP_PHPBB_API_TIME_TYPE'			=> 'Time based',
-	'ACP_PHPBB_API_TIME_CALENDAR'		=> 'On a per calendar basis',
-	'ACP_PHPBB_API_TIME_ROLLING'		=> 'Within delay (recommended)',
+	'ACP_PHPBB_API_TIME_TYPE'			=> 'Time will be based on',
+	'ACP_PHPBB_API_TIME_CALENDAR'		=> 'A calendar time basis (e.g. monday to sunday)',
+	'ACP_PHPBB_API_TIME_ROLLING'		=> 'A time interval (recommended)',
 	'ACP_PHPBB_API_TYPE'				=> 'Key type',
 	'ACP_PHPBB_API_TYPE_EXP'			=> 'Note that the administrator keys can not be managed from the user control panel.',
 
 	'ACP_PHPBB_API_UCP_KEYS'			=> 'Enable users keys',
-	'ACP_PHPBB_API_UCP_KEYS_EXP'		=> 'This will allow your users to manage their keys in an autonomous way.',
-	'ACP_PHPBB_API_UCP_URL_CRYPT'		=> 'Crypt the key into the URL',
-	'ACP_PHPBB_API_UCP_URL_CRYPT_EXP'	=> 'This functionality will hide the keys of your users from indiscreet eyes and their browsing history.
-										<br />It also adds extra security against third party script by making the key hard to recover',
-	'ACP_PHPBB_API_UNBAN'			=> 'Un-ban IPs',
+	'ACP_PHPBB_API_UCP_KEYS_EXP'		=> 'This will allow your users to manage their own keys themselves.',
+	'ACP_PHPBB_API_UCP_URL_CRYPT'		=> 'Crypt the key displayed in the URL',
+	'ACP_PHPBB_API_UCP_URL_CRYPT_EXP'	=> 'This functionality will hide the keys of your users from curious eyes and their browsing history.
+										<br />It also adds extra security against third party scripts by making the key hard to recover',
+	'ACP_PHPBB_API_UNBAN'			=> 'Unban IPs',
 	'ACP_PHPBB_API_UNBAN_EXP'		=> 'You can unban (or un-exclude) multiple IP addresses in one go using the appropriate combination of mouse and keyboard for your computer and browser.',
 	'ACP_PHPBB_API_WHITELIST'		=> 'IP white-list',
-	'ACP_PHPBB_API_WHITELIST_EXP'	=> 'List of IP that will be excluded of key attempts. To specify several different IPs enter each on a new line. To specify a wildcard use “*”.',
+	'ACP_PHPBB_API_WHITELIST_EXP'	=> 'IPs that will be excluded of invalid key bans. To specify several different IPs enter each one on a new line. To specify a wildcard use “*”.',
 	'ACP_PHPBB_API_UNBANNING'		=> 'Unbanning',
 	'ACP_PHPBB_API_UPDATED_CFG'		=> 'Settings saved',
 	'ACP_PHPBB_API_UPLOAD'			=> 'Upload',
@@ -342,8 +342,8 @@ $lang = array_merge($lang, array(
 
 	'ACP_PHPBB_API_VALIDITY_DATE'	=> 'Validity time',
 	'ACP_PHPBB_API_VIEW_MORE'		=> 'View more',
-	'ACP_PHPBB_API_WILDCARD_CHAR'	=> 'Wildcard char',
-	'ACP_PHPBB_API_WILDCARD_CHAR_EXP'=> 'This char sent alone on the API will be treated as a wildcard and so will be treated as an empty string.',
+	'ACP_PHPBB_API_WILDCARD_CHAR'	=> 'Generic char',
+	'ACP_PHPBB_API_WILDCARD_CHAR_EXP'=> 'This char sent alone on the API will be treated as an empty string.',
 
 //Mod error
 	'ACP_PHPBB_API_CRYPTO_ERROR'		=> 'The mcrypt extension is missing. Cannot activate that setting.',
