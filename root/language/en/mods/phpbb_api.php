@@ -51,6 +51,29 @@ $lang = array_merge($lang, array(
 	'API_STATUS_DISABLE'		=> 'disable',//No special chars(é,à,è)
 	'API_STATUS_ENABLE'			=> 'enable',//No special chars(é,à,è)
 
+	'API_CLI_HELP'				=> array(
+		'exit'		=> 'Terminate the current API session',
+	
+	),
+	'API_CLI_CANT_INVOKE_BASH'	=> 'Can’t invoke bash!',
+	'API_CLI_COMMAND_SENT'		=> 'The command has been sent to the system, to avoid duplicate session you will be logged out.',
+	'API_CLI_DISCONNECTED'		=> '### You are now disconnected from the API ###',
+	'API_CLI_EMAIL_CONFIRM'		=> 'Email confirmation',
+	'API_CLI_ENTER_EMAIL'		=> 'Enter email: ',
+	'API_CLI_LOGIN_AS'			=> 'Login as: ',
+	'API_CLI_NO_ANSWERS'		=> array('no', 'nope', 'n'),
+	'API_CLI_NO_VALID_KEY'		=> 'Sorry, you have no valid key for CLI use.',
+	'API_CLI_OPEN_BROWSER'		=> 'The API will try to open your browser using a system command, do you allow it? (y/n) -> ',
+	'API_CLI_OS_SUPPORT'		=> 'It seem that you Operating System (OS) is not supported (maybe not yet) URL opening.',
+	'API_CLI_SEE_BACKTRACE'		=> 'An error occured, see backtrace ? (y/n) -> ',
+	'API_CLI_STAY_CONNECTED'	=> 'Stay connected to the API ? (y/n) -> ',
+	'API_CLI_STAY_CONNECTED_EXP'=> 'You will stay connected, however please 
+note that if an error or an information message is triggered, 
+you will be disconnected from the current session.',
+	'API_CLI_YES_ANSWERS'		=> array('yes', 'yeah', 'y'),//No special chars(é,à,è)
+	'API_CLI_WRONG_EMAIL'		=> 'Wrong email!',
+	'API_CLI_WRONG_USERNAME'	=> 'Wrong username!',
+
 	//Here we allow to translate some method we pass through the URL
 	//You cannot use é è à ï etc.
 	//To translators: You can use only uppercase chars without special chars unless underscore: _

@@ -3,7 +3,7 @@
 *
 * phpBB API 0.0.1 auto-generated database configuration file
 * Do not change anything in this file!
-^>@version $Id: config.php | Auto-Generated on January 24, 2014 @ 03h36PM by Geolim4
+^>@version $Id: config.php | Auto-Generated on May 09, 2014 @ 03h14PM by Geolim4
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License

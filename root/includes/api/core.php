@@ -10,6 +10,7 @@
 
 namespace phpbb_api;
 use SimpleXMLElement;
+use arrayaccess;
 
 /**
 * @ignore
@@ -18,19 +19,13 @@ if (!defined('IN_PHPBB') || !defined('IN_PHPBB_API'))
 {
 	exit;
 }
+// Autoload all available traits
+require($phpbb_root_path . 'includes/api/core_extended/index.' . $phpEx);
 
-foreach (explode(',', API_TRAITS) AS $trait)
-{
-	if (!trait_exists($trait))
-	{
-		require(API_CORE_PATH . trim($trait) . DOT . $phpEx);
-	}
-}
-
-class api
+class api implements arrayaccess
 {
 	//Load methods from traits
-	use core_loader, core_methods, core_static, core_crypto;
+	use core_loader, core_methods, core_static, core_crypto, core_arrayaccess, core_sapi;
 
 	//Hooks vars
 	public $hooks = array();
@@ -94,9 +89,9 @@ class api
 	public $messenger;
 	public $db_tools;
 
-	/***
+	/*******
 	** Magic Methods
-	***/
+	******/
 
 	/****
 	* __construct()
@@ -108,6 +103,7 @@ class api
 	{
 		if (!defined('API_BREAK_LOADER'))
 		{
+			$this->CLI_MODE = $this->sapi_is_cli();
 			$this->loader($output, $key);
 		}
 	}
@@ -214,8 +210,7 @@ class api
 	****/
 	protected function load_login_attempts($key)
 	{
-
-		if (empty($this->config['api_mod_max_attempts']))
+		if (empty($this->config['api_mod_max_attempts']) || $this->CLI_MODE)
 		{
 			return;
 		}
@@ -255,6 +250,51 @@ class api
 	****/
 	protected function authenticate_key($key)
 	{
+		if($this->CLI_MODE)
+		{
+			$line = ''; 
+			$u_attempt = $p_attempt = 0;
+			$authed = false;
+
+			do
+			{
+				if($u_attempt)
+				{
+					$this->sapi_print($this->cli_lang('API_CLI_WRONG_USERNAME'), false, true);
+				}
+				if($u_attempt >= 3)
+				{
+					break;
+				}
+
+				$username = $this->sapi_prompt($this->cli_lang('API_CLI_LOGIN_AS'));
+				$sql = 'SELECT u.user_id, u.user_password, k.key_id
+					FROM ' . USERS_TABLE . ' u
+					LEFT JOIN ' . API_KEYS_TABLE . ' k
+						ON(u.user_id = k.user_id AND ' . $this->db->sql_in_set('sapi_mode', $this->sapi_cli_modes) . ')
+					WHERE username_clean = \'' . $this->db->sql_escape(utf8_clean_string($username)) . '\'';
+				$result = $this->db->sql_query($sql);
+				$row = $this->db->sql_fetchrow($result);
+				$this->db->sql_freeresult($result);
+
+				if($row)
+				{
+					if(empty($row['key_id']))
+					{
+						$this->trigger_error($this->cli_lang('API_CLI_NO_VALID_KEY'), E_USER_WARNING);
+					}
+					else
+					{
+						$key = $row['key_id'];
+					}
+					break;
+				}
+				$u_attempt++;
+			}
+			while(true == true);
+
+
+		}
 		//Here we join the users_table table to check if the user still exists !!
 		$sql = 'SELECT k.*, u.user_id AS user_exists
 			FROM ' . API_KEYS_TABLE . ' k
@@ -476,8 +516,35 @@ class api
 			}
 
 			$key_email = trim($key_email);
+
+			if($this->CLI_MODE)
+			{
+				// CLI authentication attempts
+				$attempt = 1;
+
+				// CLI email authentication step
+				cli_email_auth:
+				if($this->cli_authentication)
+				{
+					$key_email = $this->prompt_silent($this->cli_lang('API_CLI_ENTER_EMAIL'), $this->cli_lang('API_CLI_EMAIL_CONFIRM'));
+				}
+				else
+				{
+					$key_email = $this->user->data['user_email'];
+				}
+			}
 			if ($key_email != $this->user->data['user_email'])
 			{
+				//We cannot do while here: HTTP authentication is one try only, CLI auth is three
+				if($this->CLI_MODE)
+				{
+					if($attempt < 3)
+					{
+						$this->sapi_print($this->cli_lang('API_CLI_WRONG_EMAIL'), false, true);
+						$attempt++;
+						goto cli_email_auth;
+					}
+				}
 				if ($key_email)
 				{
 					functions\api_add_log('API_LOG_BAD_AUTH_EMAIL', $row['key_id'], $key_email);
@@ -486,8 +553,14 @@ class api
 				{
 					functions\api_add_log('API_LOG_BAD_AUTH_NO_EMAIL', $row['key_id'], $key_email);
 				}
-
 				$this->trigger_error('API_BAD_EMAIL', E_USER_WARNING);
+			}
+			else
+			{
+				if($this->CLI_MODE)
+				{
+					$this->cli_authed = true;
+				}
 			}
 		}
 
@@ -613,8 +686,13 @@ class api
 	* invoke()
 	* Invoke a local method @link [ROOT]/api.php
 	****/
-	public function invoke($action, $data, $type)
+	public function invoke($action, $type, $data, $from_cli = false)
 	{
+		if(!$from_cli)
+		{
+			$this->sapi_invoke_from_argv($action, $type, $data);
+		}
+
 		//Something wrong happened before, but let the cron task working.
 		if (!empty($this->error_triggered))
 		{
@@ -622,7 +700,25 @@ class api
 		}
 		if (empty($action))
 		{
-			$this->trigger_error('API_ERROR_NO_METHOD', E_USER_WARNING);
+			if($this->CLI_MODE && !$this->cli_connected && $this->cli_authed)
+			{
+				if(($command = $this->sapi_prompt($this->cli_get_prefix())) != 'exit')
+				{
+					if(!$this->sapi_parse($command))
+					{
+						break;
+					}
+				}
+				else
+				{
+					$this->sapi_print($this->cli_lang('API_CLI_DISCONNECTED'), true, true);
+					return;
+				}
+			}
+			else
+			{
+				$this->trigger_error('API_ERROR_NO_METHOD', E_USER_WARNING);
+			}
 		}
 		if ($type == $this->config['api_mod_wildcard_char'])
 		{
@@ -958,6 +1054,7 @@ class api
 					'msg' => isset($this->user->lang[$msg]) ? $this->user->lang[$msg] : $msg,
 					'errno' => $errno,
 				);
+
 				if($errno == E_WARNING || $errno == E_NOTICE)
 				{
 					$result['msg'] = error_handling\e_user_level($errno, true) . ' ' . $result['msg'];
@@ -1090,6 +1187,13 @@ class api
 		$callback = request_var('c', '');
 		$fallback = request_var('f', '');
 		$params = request_var('p', false);
+
+		if($this->cli_connected && !$is_error)
+		{
+			$this->cli_output($array);
+			return;
+		}
+
 		if (empty($array) && empty($this->output_str))
 		{
 			$this->trigger_error('API_NO_RECORD', E_USER_NOTICE);
@@ -1176,6 +1280,12 @@ class api
 				'GET' => $_GET,
 				'POST' => $_POST,
 			));
+			if($this->CLI_MODE)
+			{
+				$array += array('params' => array(
+					'ARGV' => $this->CLI_ARGV,
+				));
+			}
 		}
 
 		if (!isset($array['timing']))
@@ -1220,6 +1330,10 @@ class api
 				$output = serialize($array);
 			break;
 
+			case 'cli':
+				$output = $this->cli_output($array);
+			break;
+
 			default:
 				$display_prefix = "phpbb_api\hooks\displays\\";
 
@@ -1246,6 +1360,29 @@ class api
 					$output = call_user_func($display_prefix . 'hook_display_' . $this->output, $array, $this);
 				}
 			break;
+		}
+
+		if($this->CLI_MODE && !$this->cli_connected && $this->cli_authed && !$is_error)
+		{
+			$this->cli_connected = true;
+			$this->sapi_confirm($user->cli_lang('API_CLI_STAY_CONNECTED'),
+				function()
+				{
+					$this->sapi_print($this->cli_lang('API_CLI_STAY_CONNECTED_EXP'), false, true);
+
+					while(($command = $this->sapi_prompt($this->cli_get_prefix())) != 'exit')
+					{
+						if(!$this->sapi_parse($command))
+						{
+							break;
+						}
+					}
+				}
+			);
+		}
+		if($this->CLI_MODE)
+		{
+			$this->sapi_print($this->cli_lang('API_CLI_DISCONNECTED'), true, true);
 		}
 		if (!$return)
 		{

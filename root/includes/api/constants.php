@@ -28,12 +28,12 @@ else
 }
 
 //Define some "shortcuts"
-define('API_TRAITS', 'core_loader,core_methods,core_static,core_crypto');
 define('API_ROOT_PATH', $phpbb_root_path . 'includes/api/');
 define('API_CORE_PATH', $phpbb_root_path . 'includes/api/core_extended/');
 define('API_CACHE_PATH', $phpbb_root_path . 'includes/api/cache/');
 define('API_HOOKS_PATH', $phpbb_root_path . 'includes/api/hooks/');
 define('API_TEMPLATES_PATH', $phpbb_root_path . 'includes/api/templates/');
+define('API_TEMP_PATH', $phpbb_root_path . 'includes/api/tmp/');
 define('API_ERR_LOG_FILE', API_ROOT_PATH . 'error.log');
 
 //Define core constants

@@ -10,7 +10,6 @@
 
 //Set hard work-time limit
 $microtime = microtime();
-@set_time_limit(10);//10 seconds is large-acceptable response time delay for an API
 
 //Define routines constants/vars
 define('IN_PHPBB', true);
@@ -20,6 +19,17 @@ define('LOAD_PHPBB_HOOKS', false);
 define('API_TARGET_PHP_VERSION', 50410);//5.4.10 at least!
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
+$cli = false;
+
+if(strtolower(php_sapi_name()) == 'cli')
+{
+	chdir(dirname(__FILE__));
+	$cli = true;
+}
+else
+{
+	@set_time_limit(10);//10 seconds is large-acceptable response time delay for an API
+}
 
 //Call the own API common.php
 include($phpbb_root_path . 'includes/api/common.' . $phpEx);
@@ -32,7 +42,7 @@ if (php_is_up_to_date())
 	require($phpbb_root_path . 'includes/api/functions.' . $phpEx);
 	require($phpbb_root_path . 'includes/api/cache.' . $phpEx);
 	require($phpbb_root_path . 'includes/api/core.' . $phpEx);
-	require($phpbb_root_path . 'includes/api/core_extended/core_error_catcher.' . $phpEx);
+	require($phpbb_root_path . 'includes/api/core_extended/error_catcher.' . $phpEx);
 
 	//Here the bench begin
 	$api_bench_start = call_user_func('phpbb_api\functions\api_bench_start');
@@ -49,7 +59,7 @@ if (php_is_up_to_date())
 	$output			= request_var('o', 'json');		//Intput: json/xml/serialize/ini ...
 	$action			= request_var('a', '-');		//Intput: topic/post/user ...
 	$multibyte		= request_var('m', false);		//Intput: multibyte
-	$type			= request_var('t', '-', (bool) $multibyte);		//Intput: topic_id/post_id/user_id ...
+	$type			= request_var('t', '-', (bool) $multibyte);		//Input: topic_id/post_id/user_id ...
 	$key			= request_var('k', '-');		//Intput: the api key
 	$key_email		= request_var('e', '-');		//Intput: the api email
 	$sql_sorting	= request_var('s', '');			//Intput: start:10/limit:10 ...
@@ -65,7 +75,7 @@ if (php_is_up_to_date())
 	}
 
 	//Now, we handle fatal errors using ob_start hack.
-	if (function_exists('phpbb_api\error_handling\fatal_api_error_handler'))
+	if (function_exists('phpbb_api\error_handling\fatal_api_error_handler') && !$cli)
 	{
 		ob_start('phpbb_api\error_handling\fatal_api_error_handler', 0, PHP_OUTPUT_HANDLER_STDFLAGS ^ PHP_OUTPUT_HANDLER_REMOVABLE);
 	}

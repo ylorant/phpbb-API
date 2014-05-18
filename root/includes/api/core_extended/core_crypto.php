@@ -63,7 +63,10 @@ trait core_crypto
 				$this->trigger_error('API_ERROR_CRYPTO_DISABLED', E_USER_WARNING);
 			}
 		}
-		header('Content-Length: ' . utf8_strlen($string));
+		if(!headers_sent())
+		{
+			header('Content-Length: ' . utf8_strlen($string));
+		}
 		return $string;
 	}
 

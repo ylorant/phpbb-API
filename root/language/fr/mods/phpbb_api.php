@@ -51,6 +51,28 @@ $lang = array_merge($lang, array(
 	'API_STATUS_DISABLE'		=> 'desactiver',//No special chars(é,à,è)
 	'API_STATUS_ENABLE'			=> 'activer',//No special chars(é,à,è)
 
+	'API_CLI_HELP'				=> array(
+		'exit'		=> 'Terminer la session actuelle de l’API',
+	),
+	'API_CLI_CANT_INVOKE_BASH'	=> 'Impossible d’invoquer le bash!',
+	'API_CLI_COMMAND_SENT'		=> 'La commande a été envoyé au système, pour éviter une duplication de session vous allez être déconnecté.',
+	'API_CLI_DISCONNECTED'		=> '### Vous êtes maintenant déconnecté de l’API ###',
+	'API_CLI_EMAIL_CONFIRM'		=> 'Confirmation d’Email',
+	'API_CLI_ENTER_EMAIL'		=> 'Entrez l’email: ',
+	'API_CLI_LOGIN_AS'			=> 'Se connecter en tant que: ',
+	'API_CLI_NO_ANSWERS'		=> array('non', 'nope', 'n'),
+	'API_CLI_NO_VALID_KEY'		=> 'Désolé, vous n’avez pas de clé valide pour une utilisation en CLI.',
+	'API_CLI_OPEN_BROWSER'		=> 'L’API va essayer d’ouvrir votre navigateur en utilisant une commande système, l’autorisez-vous? (o/n) -> ',
+	'API_CLI_OS_SUPPORT'		=> 'Il semble que votre système d’exploitation (OS) n’est pas supporté (pas encore sans doute) pour l’ouverture d’URL.',
+	'API_CLI_SEE_BACKTRACE'		=> 'Une erreur est survenue, voir le backtrace ? (o/n) -> ',
+	'API_CLI_STAY_CONNECTED'	=> 'Rester connecté à l’API ? (o/n) -> ',
+	'API_CLI_STAY_CONNECTED_EXP'=> 'You will stay connected, however please 
+note that if an error or an information message is triggered, 
+you will be disconnected from the current session.',
+	'API_CLI_YES_ANSWERS'		=> array('oui', 'yep', 'o'),//No special chars(é,à,è)
+	'API_CLI_WRONG_EMAIL'		=> 'Mauvais email !',
+	'API_CLI_WRONG_USERNAME'	=> 'Mauvais nom d’utilisateur !',
+
 	//Here we allow to translate some method we pass through the URL
 	//You cannot use é è à ï etc.
 	//To translators: You can use only uppercase chars without special chars unless underscore: _

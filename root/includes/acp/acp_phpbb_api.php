@@ -1950,7 +1950,8 @@ class acp_phpbb_api
 		$filelist[] = 'includes/api/core_extended/core_methods.' . $phpEx;
 		$filelist[] = 'includes/api/core_extended/core_static.' . $phpEx;
 		$filelist[] = 'includes/api/core_extended/core_crypto.' . $phpEx;
-		$filelist[] = 'includes/api/core_extended/core_error_catcher.' . $phpEx;
+		$filelist[] = 'includes/api/core_extended/error_catcher.' . $phpEx;
+		$filelist[] = 'includes/api/core_extended/core_arrayaccess.' . $phpEx;
 		$filelist[] = 'includes/api/error.log';
 		$filelist[] = 'includes/api/functions.' . $phpEx;
 		$filelist[] = 'includes/api/stats/acp_api_stats_all_day.' . $phpEx;

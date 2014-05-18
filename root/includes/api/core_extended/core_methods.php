@@ -168,8 +168,36 @@ trait core_methods
 			$this->template_content
 		);
 
-		functions\api_add_log('API_LOG_API_LOGIN_ACCOUNT', $this->api_key);
-		$this->display();
+		if($this->CLI_MODE)
+		{
+		
+			$this->custom_output = false;
+			$this->output = 'html';
+			$this->template_content = '';
+			$this->sapi_confirm($this->cli_lang('API_CLI_OPEN_BROWSER'),
+				function()
+				{
+					// The browser will call the API in few instant, do not count the current call.
+					$this->skip_counter = true;
+
+					// The generate_board_url() is fully buggy in CLI: it return the full path from the HDD :(
+					functions\api_add_log('API_LOG_API_LOGIN_ACCOUNT', $this->api_key);
+					$this->config['force_server_vars'] = true;
+					$user_email = ($this->key_options['email_auth'] ? "({$this->user->data['user_email']})" : '');
+					$this->sapi_open_url(generate_board_url() . "/api/{$this->api_key}{$user_email}/login/{$this->config['api_mod_wildcard_char']}/{$this->config['api_mod_wildcard_char']}/html");
+					$this->sapi_print($this->cli_lang('API_CLI_COMMAND_SENT'), false, true);
+				},
+				function()
+				{
+					$this->display();
+				}
+			);
+		}
+		else
+		{
+			functions\api_add_log('API_LOG_API_LOGIN_ACCOUNT', $this->api_key);
+			$this->display();
+		}
 	}
 
 	/****
@@ -1098,5 +1126,23 @@ trait core_methods
 			$rows = ini_get_all();
 		}
 		$this->display($rows);
+	}
+
+	/****
+	* api_help()
+	* Ask some help to the API (CLI only)
+	* @param string $data Short message to display
+	* @param mixed $type Board status
+	****/
+	private function api_help($data, $type)
+	{
+		if($this->CLI_MODE)
+		{
+			$this->display($this->user->lang['API_CLI_HELP']);
+		}
+		else
+		{
+			$this->trigger_error('API_ERROR_METHOD', E_USER_WARNING);
+		}
 	}
 }

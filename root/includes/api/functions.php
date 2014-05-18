@@ -1651,12 +1651,12 @@ function utf8_cleaning($string)
 		chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
 		chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',
 		chr(197).chr(146) => 'OE',chr(197).chr(147) => 'oe',
-		chr(197).chr(148) => 'R',chr(197).chr(149) => 'r',
-		chr(197).chr(150) => 'R',chr(197).chr(151) => 'r',
-		chr(197).chr(152) => 'R',chr(197).chr(153) => 'r',
-		chr(197).chr(154) => 'S',chr(197).chr(155) => 's',
-		chr(197).chr(156) => 'S',chr(197).chr(157) => 's',
-		chr(197).chr(158) => 'S',chr(197).chr(159) => 's',
+		chr(197).chr(148) => 'R', chr(197).chr(149) => 'r',
+		chr(197).chr(150) => 'R', chr(197).chr(151) => 'r',
+		chr(197).chr(152) => 'R', chr(197).chr(153) => 'r',
+		chr(197).chr(154) => 'S', chr(197).chr(155) => 's',
+		chr(197).chr(156) => 'S', chr(197).chr(157) => 's',
+		chr(197).chr(158) => 'S', chr(197).chr(159) => 's',
 		chr(197).chr(160) => 'S', chr(197).chr(161) => 's',
 		chr(197).chr(162) => 'T', chr(197).chr(163) => 't',
 		chr(197).chr(164) => 'T', chr(197).chr(165) => 't',
@@ -1687,7 +1687,10 @@ function utf8_cleaning($string)
 		chr(158) => 'ž', chr(207) => 'Ď', chr(201) => 'É',
 		chr(188) => 'Ľ', chr(210) => 'Ň', chr(218) => 'Ú',
 		chr(217) => 'Ů', chr(141) => 'Ť', chr(221) => 'Ý',
-		chr(142) => 'Ž',chr(216) => 'Ř'
+		chr(142) => 'Ž', chr(216) => 'Ř',
+		
+		// Other unusual chars: 
+		'’'=> '\'',
 	);
 
 	$string = strtr($string, $chars);

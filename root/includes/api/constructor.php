@@ -23,8 +23,9 @@ if (!class_exists(__NAMESPACE__ . '\api_cache') || !class_exists(__NAMESPACE__ .
 {
 	exit;
 }
-$api_cache		= new api_cache();				//Instantiate API's cache
-$api_exception	= new exception($output);		//Instantiate API's error handler
-$api			= new api($output, $key);		//Instantiate API
-$api_exception->zombify($api, $error_handled);	//Save the world
-$api->invoke($action, $data, $type);			//Do the Job
+
+$api_cache		= new api_cache();					//Instantiate API's cache
+$api_exception	= new exception($output);			//Instantiate API's error handler
+$api			= new api($output, $key);			//Instantiate API
+$api_exception->zombify($api, $error_handled);		//Save the world
+$api->invoke($action, $type, $data);				//Do the Job

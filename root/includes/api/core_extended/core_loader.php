@@ -76,6 +76,13 @@ trait core_loader
 		$this->browser			= (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
 		$this->ip				= ($this->config['ip_login_limit_use_forwarded'] && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $this->ip = $_SERVER['HTTP_X_FORWARDED_FOR'] : ((!empty($_SERVER['REMOTE_ADDR'])) ? (string) $_SERVER['REMOTE_ADDR'] : '127.0.0.1');
 		$this->forwarded_for	= (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? htmlspecialchars((string) $_SERVER['HTTP_X_FORWARDED_FOR']) : '';
+		
+		if($this->CLI_MODE)
+		{
+			global $argv;
+			$this->output = 'cli';
+			$this->sapi_init($argv);
+		}
 	}
 
 	/****
