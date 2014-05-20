@@ -83,8 +83,7 @@ if (!defined(__NAMESPACE__ . '\USER_HOOK_API_TARGET_VERSION'))
 		$mom->ignore_cron = false;
 
 		//$template_content = $mom->template_content;
-		global $sql_sorting;
-		$sql_sorting = apiFN\sql_sorting($sql_sorting, $data);
+		$sql_sorting = apiFN\sql_sorting($mom->sql_sorting, $data);
 		$rows = array();
 		if ($type && $data !== '')
 		{

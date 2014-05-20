@@ -74,6 +74,7 @@ define('API_GEN_SOURCE_ACP', 1);
 define('API_GEN_SOURCE_UCP', 2);
 define('LOG_API', 1);
 define('LOG_API_ERROR_OPERATIONS', 'API_LOG_FATAL_ERROR,API_LOG_NON_FATAL_ERROR');
+define('API_SSO', 'NOT LIKE|LIKE|REGEXP|\<\>|\>\=|\<\=|\=|\<|\>');
 
 //Define some tricks
 define('DOT', '.');

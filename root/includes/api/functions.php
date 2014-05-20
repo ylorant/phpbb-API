@@ -1428,7 +1428,7 @@ function sql_sorting($sql_sorting, &$data = '')
 	}
 
 	//restrict only to basic operators, this will prevent SQL injections
-	if (preg_match('#operator:(NOT LIKE|LIKE|REGEXP|\<\>|\>\=|\<\=|\=|\<|\>)#i', str_replace(array('&lt;', '&gt;'), array('<', '>'), $sql_sorting), $matches))
+	if (preg_match('#operator:(' . API_SSO . ')#i', str_replace(array('&lt;', '&gt;'), array('<', '>'), $sql_sorting), $matches))
 	{
 		$sort['operator'] = strtoupper($matches[1]);
 		if (($sort['operator'] == 'LIKE' || $sort['operator'] == 'NOT LIKE') && !empty($data))
@@ -1572,7 +1572,7 @@ function set_no_cache_headers()
 ****/
 function utf8_cleaning($string)
 {
-	if (!preg_match('/[\x80-\xff]/', $string))
+	if (!is_string($string) || !preg_match('/[\x80-\xff]/', $string))
 	{
 		return $string;
 	}

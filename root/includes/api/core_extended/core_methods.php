@@ -377,8 +377,7 @@ trait core_methods
 		$this->skip_counter = false;
 		$this->skip_crypto = false;
 
-		global $sql_sorting;
-		$sql_sorting = functions\sql_sorting($sql_sorting, $data);
+		$sql_sorting = functions\sql_sorting($this->sql_sorting, $data);
 
 		$rows = array();
 		if ($type && $data !== '')
@@ -424,8 +423,7 @@ trait core_methods
 		$this->skip_counter = false;
 		$this->skip_crypto = false;
 
-		global $sql_sorting;
-		$sql_sorting = functions\sql_sorting($sql_sorting, $data);
+		$sql_sorting = functions\sql_sorting($this->sql_sorting, $data);
 
 		$rows = array();
 		if ($type && $data !== '')
@@ -468,8 +466,7 @@ trait core_methods
 		$this->skip_counter = false;
 		$this->skip_crypto = false;
 
-		global $sql_sorting;
-		$sql_sorting = functions\sql_sorting($sql_sorting, $data);
+		$sql_sorting = functions\sql_sorting($this->sql_sorting, $data);
 
 		$rows = array();
 		if ($type && $data !== '')
@@ -512,8 +509,7 @@ trait core_methods
 		$this->skip_counter = false;
 		$this->skip_crypto = false;
 
-		global $sql_sorting;
-		$sql_sorting = functions\sql_sorting($sql_sorting, $data);
+		$sql_sorting = functions\sql_sorting($this->sql_sorting, $data);
 
 		$rows = array();
 		if ($type && $data !== '')
@@ -704,7 +700,7 @@ trait core_methods
 			case'email':
 				switch($type)
 				{
-					case'user':
+					case 'user':
 						$sql = 'SELECT user_id
 							FROM ' . USERS_TABLE . "
 							WHERE username_clean = '" . $this->db->sql_escape(utf8_clean_string($data)) . "'";
@@ -716,11 +712,11 @@ trait core_methods
 						$where_sql = "ban_userid = %s";
 					break;
 
-					case'ip' :
+					case 'ip':
 						$where_sql = "ban_ip = '%s'";
 					break;
 
-					case'email':
+					case 'email':
 						$where_sql = "ban_email = '%s'";
 					break;
 				}
@@ -1008,8 +1004,7 @@ trait core_methods
 		$this->skip_counter = false;
 		$this->skip_crypto = false;
 
-		global $sql_sorting;
-		$sql_sorting = functions\sql_sorting($sql_sorting, $data);
+		$sql_sorting = functions\sql_sorting($this->sql_sorting, $data);
 		$sql = &$data;
 		$rows = array();
 
@@ -1023,9 +1018,9 @@ trait core_methods
 			functions\api_add_log('API_LOG_SQL_QUERY_UNAUTHORIZED', $this->api_key, $sql);
 			$this->trigger_error($this->user->lang('API_UNAUTHORIZED_SQL_API'), E_USER_WARNING);
 		}
-		if (!functions\is_post_request())
+		if (!functions\is_post_request() && !$this->CLI_MODE)
 		{
-			//$this->trigger_error($this->user->lang('API_ERROR_METHOD_REQUEST', functions\get_request_method()), E_USER_WARNING);
+			$this->trigger_error($this->user->lang('API_ERROR_METHOD_REQUEST', functions\get_request_method()), E_USER_WARNING);
 		}
 		if (!($sql = trim($sql)))
 		{

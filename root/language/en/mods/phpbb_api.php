@@ -53,7 +53,6 @@ $lang = array_merge($lang, array(
 
 	'API_CLI_HELP'				=> array(
 		'exit'		=> 'Terminate the current API session',
-	
 	),
 	'API_CLI_CANT_INVOKE_BASH'	=> 'Can’t invoke bash!',
 	'API_CLI_COMMAND_SENT'		=> 'The command has been sent to the system, to avoid duplicate session you will be logged out.',
@@ -166,7 +165,7 @@ you will be disconnected from the current session.',
 	//API errors...
 	'API_BAD_EMAIL'					=> 'This key is secured with the email address of his owner. Please refer to the API manual to authenticate with the email address.',
 	'API_BAD_IP'					=> 'This key cannot be used with this IP address (your current IP: %s)',
-	'API_BAN_REASON'				=> 'You have been permanently banned from this forum by API.',
+	'API_BAN_REASON'				=> 'You have been permanently banned from this forum by administrator via the API.',
 
 	'API_ERROR_ATTEMPTS'			=> 'You exceeded the maximum allowed number of login attempts with this IP resulting a temporary ban from the API.',
 	'API_ERROR_CRYPTO_DISABLED'		=> 'The cryptographic functionality has been disabled by an Administrator.',

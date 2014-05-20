@@ -38,6 +38,47 @@ trait core_sapi
 		'thttpd', 'tux', 'webjames'
 	);
 
+	protected $cli_params = array(
+		's' => array(
+			'type' => 'string',
+			'operator' => '.=',
+			'local' => 'sql_sorting',
+			'default' => '',
+		),
+		'u' => array(
+			'type' => 'bool',
+			'operator' => '=',
+			'local' => 'join_user_data',
+			'default' => false,
+		),
+		'h' => array(
+			'type' => 'bool',
+			'operator' => '=',
+			'local' => 'convert_timestamp',
+			'default' => false,
+		),
+		'i' => array(
+			'type' => 'bool',
+			'operator' => '=',
+			'local' => 'api_type',
+			'default' => API_TYPE_ADMIN,
+			'cases' => array(
+				true => API_TYPE_ADMIN,
+				false => API_TYPE_USER
+			)
+		),
+		'v' => array(
+			'type' => 'bool',
+			'operator' => '=',
+			'local' => 'api_auto_consts',
+			'default' => true,
+			'cases' => array(
+				true => true,
+				false => false
+			)
+		),
+	);
+
 	protected $sapi_cli_modes = array(
 		'cli', 'cli-server'
 	);
@@ -142,7 +183,7 @@ trait core_sapi
 			{
 				if (preg_match('/^win/i', PHP_OS))
 				{
-					print('@echo off');
+					echo '@echo off';
 				}
 			}
 			$this->sapi_print($title);
@@ -155,7 +196,7 @@ trait core_sapi
 
 	protected function sapi_open_url($url)
 	{
-		// Thanks to the internet http://www.dwheeler.com/essays/open-files-urls.html
+		// Thanks internet http://www.dwheeler.com/essays/open-files-urls.html
 		if (preg_match('/^win/i', PHP_OS))
 		{
 			exec('start ' . escapeshellcmd($url));
@@ -208,7 +249,7 @@ trait core_sapi
 			$password = rtrim(shell_exec($command));
 			$this->sapi_print(str_repeat('*', 10), false, true);
 
-			print "\n";
+			echo "\n";
 			return $password;
 		}
 	}
@@ -217,26 +258,22 @@ trait core_sapi
 	{
 		if($new_line_before)
 		{
-			print(PHP_EOL);
+			echo PHP_EOL;
 		}
 
-		print(functions\utf8_cleaning($str));
+		echo functions\utf8_cleaning($str);
 		
 		if($newline_after)
 		{
-			print(PHP_EOL);
+			echo PHP_EOL;
 		}
 	}
 	
-	protected function cli_output($array, $tab = 1, $clean_utf8_chars = true)
+	protected function cli_output($array, $tab = 1)
 	{
-		if($clean_utf8_chars)
-		{
-			$array = array_map('\phpbb_api\functions\utf8_cleaning', $array);
-		}
-
 		// Remove useless things in CLI mode
 		unset($array["timing"], $array["status"], $array["errno"]);
+
 		if(!empty($array["backtrace"]))
 		{
 			$this->sapi_confirm($this->cli_lang('API_CLI_SEE_BACKTRACE'),
@@ -255,13 +292,13 @@ trait core_sapi
 		{
 			if(is_array($value))
 			{
-				print("{$indenter}{$key}:\n");
-				$this->cli_output($value, $tab + 1, $clean_utf8_chars);
-				print("\n");
+				echo "{$indenter}{$key}:\n";
+				$this->cli_output($value, $tab + 1);
+				echo "\n";
 			}
 			else
 			{
-				print("{$indenter}{$key}: {$value}\n");
+				echo "{$indenter}{$key}: {$value}\n";
 			}
 		}
 	}
@@ -289,19 +326,99 @@ trait core_sapi
 	protected function sapi_parse($command)
 	{
 		$command = explode(' ', $command);
+		$temp_options = array();
+		$magic = 0;
+		$like_wrap = false;
+		$this->sql_sorting = "";
+
 		$cmd_array = array(
 			'action' => isset($command[0]) ? trim($command[0]) : null,
 			'type' => isset($command[1]) ? trim($command[1]) : null,
 			'data' => '',
 		);
-		foreach($command AS $key => $value)
+
+		foreach ($command AS $key => $value)
 		{
 			//Skip action && type
-			if($key <= 1)
+			if ($key <= 1)
 			{
 				continue;
 			}
-			$cmd_array['data'] .= (($key > 2 ? ' ': '') . $value);
+			//restrict only to basic operators, this will prevent SQL injections
+			if ($key == 2 && preg_match('#(' . API_SSO . ')#i', trim($value), $matches))
+			{
+				$sort['operator'] = strtoupper($matches[1]);
+				if ($sort['operator'] == 'LIKE' || $sort['operator'] == 'NOT LIKE')
+				{
+					$like_wrap = true;
+				}
+
+				$this->sql_sorting = "operator:{$sort['operator']}";
+				$magic = 1;
+				continue;
+			}
+			if (preg_match('#&([a-z])=(.*)#', trim($value), $matches))
+			{
+				if (isset($matches[1]) && isset($matches[2]))
+				{
+					$temp_options[$matches[1]] = $matches[2];
+					continue;
+				}
+			}
+			$cmd_array['data'] .= ((($key - $magic) > 2 ? ' ': '') . $value);
+		}
+
+		if ($like_wrap)
+		{
+			$cmd_array['data'] = "%{$cmd_array['data']}%";
+		}
+
+		foreach ($this->cli_params AS $param => $cli_params_)
+		{
+			$cli_param_local = null;
+			if (isset($temp_options[$param]))
+			{
+				if (!empty($cli_params_['type']))
+				{
+					settype($temp_options[$param], $cli_params_['type']);
+				}
+				//If we have some cases and not one matche, unset that var
+				if (!empty($cli_params_['cases']) && !isset($cli_params_['cases'][$temp_options[$param]]))
+				{
+					unset($temp_options[$param]);
+				}
+				else if (!empty($cli_params_['cases']) && isset($cli_params_['cases'][$temp_options[$param]]))
+				{
+					$cli_param_local = $cli_params_['cases'][$temp_options[$param]];
+				}
+				else
+				{
+					$cli_param_local = $temp_options[$param];
+				}
+			}
+			else if (isset($cli_params_['default']))
+			{
+				$cli_param_local = $cli_params_['default'];
+			}
+
+			if (!is_null($cli_param_local))
+			{
+				switch($cli_params_['operator'])
+				{
+					case '+=':
+						$this->{$cli_params_['local']} += $cli_param_local;
+					break;
+
+					case '.=':
+						$this->{$cli_params_['local']} .= $cli_param_local;
+					break;
+
+					case '=':
+					default:
+						$this->{$cli_params_['local']} = $cli_param_local;
+					break;
+				}
+			}
 		}
 
 		//Reset the error status

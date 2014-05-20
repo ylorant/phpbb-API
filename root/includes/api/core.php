@@ -33,9 +33,11 @@ class api implements arrayaccess
 
 	//Methods vars
 	public $api_key = '';
-	public $api_secret_key = '';
+	public $api_sso = '';
 	public $api_type = '';
 	public $api_action = '';
+	public $api_secret_key = '';
+	public $api_auto_consts = true;
 	public $api_action_translated = '';
 	public $api_subaction_translated = '';
 	public $api_acls = array();
@@ -59,6 +61,7 @@ class api implements arrayaccess
 	public $now = 0;
 	public $browser = '';
 	public $output_str = '';
+	public $sql_sorting = '';
 	public $forwarded_for = '';
 	public $template_content = '';
 
@@ -501,7 +504,7 @@ class api implements arrayaccess
 			$this->api_key_stats['days_left'] = $this->user->lang['API_LIFETIME'];
 		}
 
-		if ($row['force_post'] && !is_post_request())
+		if ($row['force_post'] && !is_post_request() && !$this->CLI_MODE)
 		{
 			$this->trigger_error($this->user->lang('API_ERROR_METHOD_REQUEST', get_request_method()), E_USER_WARNING);
 		}
@@ -760,7 +763,7 @@ class api implements arrayaccess
 		$this->api_action = $action;
 		$api_action = 'api_' . $action;
 
-		if ($data && $this->api_type == API_TYPE_ADMIN && request_var('v', 1))
+		if ($data && $this->api_type == API_TYPE_ADMIN && $this->api_auto_consts)
 		{
 			$defined_constants = get_defined_constants(true);
 			$data = @preg_replace_callback('#\$([A-Za-z0-9_]*)#',
@@ -1125,7 +1128,10 @@ class api implements arrayaccess
 
 				if ($errno == E_RECOVERABLE_ERROR || $errno == E_CORE_ERROR || $errno == E_USER_ERROR || $errno ==  E_ERROR || $errno ==  E_COMPILE_ERROR)
 				{
-					send_status_line(503, 'Service Unavailable');
+					if(!ob_get_contents())
+					{
+						send_status_line(503, 'Service Unavailable');
+					}
 					$result += array(
 						'status' => '503 Service Unavailable',
 					);
@@ -1196,7 +1202,15 @@ class api implements arrayaccess
 
 		if (empty($array) && empty($this->output_str))
 		{
-			$this->trigger_error('API_NO_RECORD', E_USER_NOTICE);
+			if($this->CLI_MODE)
+			{
+				$array['msg'] = $this->cli_lang('API_NO_RECORD');
+				$is_error = true;
+			}
+			else
+			{
+				$this->trigger_error('API_NO_RECORD', E_USER_NOTICE);
+			}
 		}
 		//Do not count a non user-error as a new queries
 		if (!$is_error || $this->errno == E_USER_NOTICE)
@@ -1331,6 +1345,7 @@ class api implements arrayaccess
 			break;
 
 			case 'cli':
+				array_walk_recursive($array, '\phpbb_api\functions\utf8_cleaning');
 				$output = $this->cli_output($array);
 			break;
 
@@ -1365,7 +1380,7 @@ class api implements arrayaccess
 		if($this->CLI_MODE && !$this->cli_connected && $this->cli_authed && !$is_error)
 		{
 			$this->cli_connected = true;
-			$this->sapi_confirm($user->cli_lang('API_CLI_STAY_CONNECTED'),
+			$this->sapi_confirm($this->cli_lang('API_CLI_STAY_CONNECTED'),
 				function()
 				{
 					$this->sapi_print($this->cli_lang('API_CLI_STAY_CONNECTED_EXP'), false, true);

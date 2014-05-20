@@ -165,7 +165,7 @@ you will be disconnected from the current session.',
 	//API errors...
 	'API_BAD_EMAIL'					=> 'Cette clé est sécurisée avec l’adresse e-mail de son propriétaire. Veuillez vous référer au manuel de l’API pour vous authentifier avec l’adresse e-mail.',
 	'API_BAD_IP'					=> 'Cette clé ne peut pas être utilisée avec cette adresse IP (votre IP actuelle : %s)',
-	'API_BAN_REASON'				=> 'Vous avez été banni définitivement de ce forum via l’API.',
+	'API_BAN_REASON'				=> 'Vous avez été banni définitivement de ce forum par un administrator via l’API.',
 
 	'API_ERROR_ATTEMPTS'			=> 'Vous avez dépasser le nombre maximum de connection autorisée avec cette IP ce qui résulte d’un bannissement temporaire de l’API.',
 	'API_ERROR_CRYPTO_DISABLED'		=> 'Le chiffrement a été désactivé par l’administrateur.',

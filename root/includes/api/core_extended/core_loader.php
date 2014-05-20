@@ -56,8 +56,9 @@ trait core_loader
 	****/
 	protected function load_vars()
 	{
-		global $template, $db, $user, $auth, $config, $api_exception;
+		global $template, $db, $user, $auth, $config, $api_exception, $sql_sorting;
 		global $phpbb_root_path, $phpEx, $cache, $api_cache, $table_prefix;
+
 		//Do the globals vars fork
 		$this->template			= &$template;
 		$this->db				= &$db;
@@ -76,7 +77,9 @@ trait core_loader
 		$this->browser			= (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
 		$this->ip				= ($this->config['ip_login_limit_use_forwarded'] && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $this->ip = $_SERVER['HTTP_X_FORWARDED_FOR'] : ((!empty($_SERVER['REMOTE_ADDR'])) ? (string) $_SERVER['REMOTE_ADDR'] : '127.0.0.1');
 		$this->forwarded_for	= (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? htmlspecialchars((string) $_SERVER['HTTP_X_FORWARDED_FOR']) : '';
-		
+		$this->sql_sorting		= $sql_sorting;
+		$this->api_auto_consts	= request_var('v', 1);
+
 		if($this->CLI_MODE)
 		{
 			global $argv;

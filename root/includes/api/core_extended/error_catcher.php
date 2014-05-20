@@ -10,6 +10,8 @@
 */
 namespace phpbb_api\error_handling;
 use \phpbb_api\api AS api_master, \phpbb_api\functions AS apiFN;
+use arrayaccess;
+
 /**
 * @ignore
 */
@@ -20,7 +22,7 @@ if (!defined('IN_PHPBB') || !defined('IN_PHPBB_API'))
 define('API_DISPLAY_FATAL_AS_HTML', true);
 
 //Don't allow extending of api exception
-final class exception extends api_master
+final class exception extends api_master implements arrayaccess
 {
 	public function __construct($output)
 	{
@@ -386,10 +388,10 @@ function unrecoverable_fatal_error($message, $return = false)
 
 	if(!headers_sent())
 	{
-		send_status_line(503, 'Service Unavailable');
+		@send_status_line(503, 'Service Unavailable');
 	}
 	echo $message;
 
-	garbage_collection();
-	exit_handler();
+	@garbage_collection();
+	@exit_handler();
 }
