@@ -2,7 +2,7 @@
 /**
 *
 * @package language [Standard french] phpBB API
-^>@version $Id: info_acp_phpbb_api.php v0.0.1 18h35 03/08/2014 Zoddo Exp $
+^>@version $Id: info_acp_phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -111,6 +111,7 @@ $lang = array_merge($lang, array(
 	'API_LOG_BAD_AUTH_OUT_OF_QUOTA'	=> '<strong>Authentification refusée :</strong><br />» Quota atteint' . $api_lang_suffix,
 	'API_LOG_BAD_AUTH_DEACTIVATED'	=> '<strong>Authentification refusée :</strong><br />» Clé désactivée' . $api_lang_suffix,
 	'API_LOG_BAD_AUTH_SUSPENDED'	=> '<strong>Authentification refusée :</strong><br />» Clé suspendue' . $api_lang_suffix,
+	'API_LOG_BAD_AUTH_SAPI'			=> '<strong>Authentification refusée :</strong><br />» Mode SAPI non autorisé: %s' . $api_lang_suffix,
 	'API_LOG_BAN_EMAIL'				=> '<strong>Bannissement d’une adresse e-mail</strong><br />» %s' . $api_lang_suffix,
 	'API_LOG_BAN_IP'				=> '<strong>Bannissement d’une adresse IP</strong><br />» %s' . $api_lang_suffix,
 	'API_LOG_BANNED_IP'				=> '<strong>Authentification refusée :</strong><br />» IP bannie (%s tentatives)' . $api_lang_suffix,
@@ -174,7 +175,10 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_DEACTIVATED_METHODS'	=> 'Méthodes désactivées',
 	'ACP_PHPBB_API_DEACTIVATED_METHODS_EXP'	=> 'Sélectionnez une ou plusieurs méthodes d’un coup en utilisant la combinaison de touches appropriée avec votre clavier et votre souris.
 											<br />Notez que certaines méthodes sont déjà réservées aux clés d’administrateur. Consultez le %1$smanuel%2$s pour plus d’informations.',
-	'ACP_PHPBB_API_DEFAULT_SETTINGS'	=> 'Paramètres par défaut',
+	'ACP_PHPBB_API_SAPI_MODES'			=> 'Modes SAPI',
+	'ACP_PHPBB_API_SAPI_MODES_EXP'		=> 'Vous pouvez choisir le(s) contexte(s) SAPI ou la clé sera autorisé à être utilisé.',
+
+											'ACP_PHPBB_API_DEFAULT_SETTINGS'	=> 'Paramètres par défaut',
 	'ACP_PHPBB_API_DELETE'				=> 'Supprimer',
 	'ACP_PHPBB_API_DELETED'				=> 'La clé <strong>%s</strong> a été supprimée avec succès !',
 
@@ -211,6 +215,7 @@ $lang = array_merge($lang, array(
 												<br />Notez que ce paramètre est forcé pour les clés de type «&nbsp;Administrateur&nbsp;».',
 	'ACP_PHPBB_API_KEY_FORCE_POST'			=> 'Forcer le mode POST',
 	'ACP_PHPBB_API_KEY_FORCE_POST_EXP'		=> 'Cela empêchera la clé d’être utilisée autrement qu’avec la mode POST.',
+	'ACP_PHPBB_API_KEY_ACP_LOGIN'			=> 'Autoriser la connexion à l’ACP via la méthode <em>login</em>',
 	'ACP_PHPBB_API_KEY_HISTORY'				=> 'Historique brut',
 	'ACP_PHPBB_API_KEY_HISTORY_DET'			=> 'Historique détaillé',
 	'ACP_PHPBB_API_KEY_INDEX'				=> 'Index des clés',

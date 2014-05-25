@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3 API Core extend: Methods
-^>@version $Id: core_methods.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: core_methods.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -114,11 +114,30 @@ trait core_methods
 		$this->display($this->get_crypto_config());
 	}
 
+
+	/****
+	* api_help()
+	* Ask some help to the API (CLI only)
+	* @param string $data Short message to display
+	* @param mixed $type Board status
+	****/
+	protected function api_help($data, $type)//Protected as this method must be ignored by Reflection extension
+	{
+		if($this->CLI_MODE)
+		{
+			$this->display($this->user->lang['API_CLI_HELP']);
+		}
+		else
+		{
+			$this->trigger_error('API_ERROR_METHOD', E_USER_WARNING);
+		}
+	}
+
 	/****
 	* api_login()
 	* Login into the API using the key.
-	* @param string $data --Not used--
-	* @param string $type --Not used--
+	* @param string $data Admin option: acp => chosen module (update/bots/email/mods ...)
+	* @param string $type Admin option: acp => log in to acp
 	****/
 	private function api_login($data, $type)
 	{
@@ -135,13 +154,33 @@ trait core_methods
 		$this->output = API_CUSTOM_OUTPUT;
 		$this->template_content = $this->get_template_content('api_default.html');
 		$this->user->set_cookie('api', unique_id(), time() + $this->config['session_length']);
-
 		header('Content-Type: text/html; charset=UTF-8');
-		
+		$params = array();
+
+		if($type == 'acp' && $this->api_acp_logged_in && $this->auth->acl_get('a_'))
+		{
+			$path = "/{$this->api_acp_path}index.{$this->phpEx}";
+			if($data)
+			{
+				$params = array('i' => $data);
+			}
+			$message = $this->user->lang['API_LOGIN_ACP_WAIT'];
+		}
+		else if($type == 'acp' && !$this->api_acp_logged_in && $this->auth->acl_get('a_'))
+		{
+			trigger_error('API_ERROR_NO_ACP_LOGIN', E_USER_WARNING);
+		}
+		else
+		{
+			$path = "/index.{$this->phpEx}";
+			$message = $this->user->lang['API_LOGIN_WAIT'];
+		}
+		$url = append_sid(generate_board_url() . $path, $params);
+
 		$vars = array(
-			'HEAD_META_CONTENT' => '<meta http-equiv="refresh" content="3; url=' . append_sid(generate_board_url()) . '" />',
+			'HEAD_META_CONTENT' => '<meta http-equiv="refresh" content="3; url=' . $url . '" />',
 			'CSS_CONTENT' => 'p{font-weight: bold;text-align: center;}',
-			'MAIN_HTML_CONTENT' => '<p>' . $this->user->lang['API_LOGIN_WAIT'] . '</p>',
+			'MAIN_HTML_CONTENT' => '<p>' . $message . '</p>',
 			'METHOD_NAME' => $this->api_action_translated,
 		);
 
@@ -175,16 +214,34 @@ trait core_methods
 			$this->output = 'html';
 			$this->template_content = '';
 			$this->sapi_confirm($this->cli_lang('API_CLI_OPEN_BROWSER'),
-				function()
+				function() use ($data)
 				{
 					// The browser will call the API in few instant, do not count the current call.
 					$this->skip_counter = true;
+
+					if($this->api_acp_logged_in && $this->auth->acl_get('a_'))
+					{
+						$mode = 'acp';
+					}
+					else
+					{
+						$mode = $this->config['api_mod_wildcard_char'];
+					}
+
+					if($data)
+					{
+						$data = urlencode($data);
+					}
+					else
+					{
+						$data = $this->config['api_mod_wildcard_char'];
+					}
 
 					// The generate_board_url() is fully buggy in CLI: it return the full path from the HDD :(
 					functions\api_add_log('API_LOG_API_LOGIN_ACCOUNT', $this->api_key);
 					$this->config['force_server_vars'] = true;
 					$user_email = ($this->key_options['email_auth'] ? "({$this->user->data['user_email']})" : '');
-					$this->sapi_open_url(generate_board_url() . "/api/{$this->api_key}{$user_email}/login/{$this->config['api_mod_wildcard_char']}/{$this->config['api_mod_wildcard_char']}/html");
+					$this->sapi_open_url(generate_board_url() . "/api/{$this->api_key}{$user_email}/login/{$mode}/{$data}/html");
 					$this->sapi_print($this->cli_lang('API_CLI_COMMAND_SENT'), false, true);
 				},
 				function()
@@ -611,7 +668,7 @@ trait core_methods
 
 		if ($type == 'all' || $type == 'num_files')
 		{
-			$sql = 'SELECT COUNT(attach_id) as stat
+			$sql = 'SELECT COUNT(attach_id) AS stat
 				FROM ' . ATTACHMENTS_TABLE . '
 				WHERE is_orphan = 0';
 			$result = $this->db->sql_query($sql);
@@ -621,7 +678,7 @@ trait core_methods
 
 		if ($type == 'all' || $type == 'upload_dir_size')
 		{
-			$sql = 'SELECT SUM(filesize) as stat
+			$sql = 'SELECT SUM(filesize) AS stat
 				FROM ' . ATTACHMENTS_TABLE . '
 				WHERE is_orphan = 0';
 			$result = $this->db->sql_query($sql);
@@ -1121,23 +1178,5 @@ trait core_methods
 			$rows = ini_get_all();
 		}
 		$this->display($rows);
-	}
-
-	/****
-	* api_help()
-	* Ask some help to the API (CLI only)
-	* @param string $data Short message to display
-	* @param mixed $type Board status
-	****/
-	private function api_help($data, $type)
-	{
-		if($this->CLI_MODE)
-		{
-			$this->display($this->user->lang['API_CLI_HELP']);
-		}
-		else
-		{
-			$this->trigger_error('API_ERROR_METHOD', E_USER_WARNING);
-		}
 	}
 }

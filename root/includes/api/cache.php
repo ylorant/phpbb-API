@@ -2,7 +2,7 @@
 /**
 *
 * @package API cache extending
-^>@version $Id: cache.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: cache.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License

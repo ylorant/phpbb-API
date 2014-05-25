@@ -2,7 +2,7 @@
 /**
 *
 * @package language [Standard french] phpBB API
-^>@version $Id: info_ucp_phpbb_api.php v0.0.1 18h35 03/08/2014 Zoddo Exp $
+^>@version $Id: info_ucp_phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -226,7 +226,7 @@ $lang['UCP_PHPBB_API_KNOWLEDGE_BASE'] = array(
 		1 => 'Le mode POST est [b]hautement[/b] recommandée de manière générale surtout pour les requêtes utilisant des opérateurs et/ou des caractères spéciaux comme des accents.
 			Les exemples ci-dessous seront représentés sous forme d’un tableau cURL (PHP).
 			[br]Récupérons ici le sujet dont le titre contient le mot « élémentaire »
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "topic",
@@ -236,7 +236,7 @@ $lang['UCP_PHPBB_API_KNOWLEDGE_BASE'] = array(
 		"d" => "élémentaire",
 		"o" => "json",
 ));[/code]Nous avons donc utilisé le S.S.O "LIKE". Le masque "%" est ajouté automatiquement par l’API.
-[br]Vous pouvez également utiliser une REGEXP pour affiner les critères de recherche :[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+[br]Vous pouvez également utiliser une REGEXP pour affiner les critères de recherche :[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "topic",
@@ -283,7 +283,7 @@ Comme vous pouvez le voir ci-dessus, le code utilisé pour déchiffrer le fichie
 		'a_'	=> true,//require the user to have at least an administrator key to view that part
 		0 => 'Recherche par constantes systèmes',
 		1 => 'Vous pouvez utiliser des constantes de phpBB (et uniquement celles-ci) afin d’effectuer des recherches plus poussées. Vous devez la préfixer avec le signe [b]$[/b]
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "topic",
@@ -304,7 +304,7 @@ Vous pouvez modifier le paramètre [b]v[/b] afin de désactiver ces dernières (
 		0 => 'Récupérer des données de sujets/messages/forums/groupes',
 		1 => 'L’API vous permet de récupérer quelques données basiques des sujets/messages/forums/groupes.
 			[br]Sur l’exemple ci-dessous, nous tentons de récupérer les données du forum dont l’ID est [b]1[/b]
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "forum",
@@ -321,7 +321,7 @@ Bien sûr à vous d’adapter le code si vous souhaitez récupérer des données
 		0 => 'Récupérer des données de configuration',
 		1 => 'L’API vous permet de récupérer quelques données basiques de configuration.
 			[br]Récupérons ici toutes les données de configurations basique, comme par exemple la taille maximum des avatars, la description du site ou encore la date d’ouverture du forum :
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -333,7 +333,7 @@ Bien sûr à vous d’adapter le code si vous souhaitez récupérer des données
 ));[/code][adminkey]
 Vous pouvez également récupérer différents types de configuration avec trois modes différents : « cached », « dynamic », « custom ».
 			[br]Récupérons ici toutes les variables de configuration en cache :
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -344,7 +344,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		"o" => "json",
 ));[/code]
 			[br]Récupérons ici toutes les variables de configuration dynamiques :
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -355,7 +355,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		"o" => "json",
 ));[/code]
 			Récupérons ici des variables de configuration personnalisées, en utilisant le paramètre [b]d[/b] en séparant chaque nom de configuration par une virgule.
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -371,7 +371,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		'a_'	=> true,//require the user to have at least an administrator key to view that part
 		0 => 'Récupérer les constantes systèmes disponibles',
 		1 => 'Vous pouvez récupérer la liste des constantes système disponibles en utilisant la méthode [b]{METHOD}[/b]
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -390,7 +390,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 			[br]Modifions ici quelques variables de configuration, nous devons donc faire appel au paramètre [b]d[/b].
 			Vous ne pouvez utiliser que deux formats pour envoyer une nouvelle valeur de configuration : JSON et serialize (PHP).
 			[br]Les données de configuration à modifier sont envoyées par paire « nom de configuration/valeur »
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -416,7 +416,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 				[*][b]upload_dir_size[/b]: Force la ré-actualisation de la taille du répertoire des fichiers-joints.
 				[*][b]update_last_username[/b]: Force la ré-actualisation du dernier utilisateur inscrit.
 			[/list]
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -436,7 +436,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 			[br]Il est préférable d’activer le paramètre multibyte ([b]m[/b]) pour des raisons de compatibilité.
 			[br]Soyez très prudent lors d’exécution de requêtes sensibles telles que [b]DELETE/DROP/TRUNCATE[/b].
 			[br][b][color=#BC2A4D]Pour des raisons de sécurité, toutes les requêtes SQL sont archivées dans les journaux après exécution.[/color][/b]
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -454,7 +454,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		1 => 'Vous pouvez bannir définitivement une entité telle qu’une IP, un nom d’utilisateur ou bien encore une adresse e-mail.
 			Utilisez la sous-méthode ([b]t[/b]) pour définir le type d’entité à bannir tels que <em>user/ip/email</em>.
 			La valeur ([b]d[/b]) représentera l’entité à bannir.
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -472,7 +472,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		1 => 'Vous pouvez dé-bannir une entité telle qu’une IP, un nom d’utilisateur ou bien encore une adresse e-mail.
 			Utilisez la sous-méthode ([b]t[/b]) pour définir le type d’entité à dé-bannir tels que <em>user/ip/email</em>.
 			La valeur ([b]d[/b]) représentera l’entité à dé-bannir.
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -490,7 +490,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		1 => 'Vous pouvez activer ou désactiver le forum pour des manipulations sensibles par exemple.
 			Utilisez la sous-méthode ([b]t[/b]) pour définir le statut du forum <em>activer/désactiver</em> ou <em>true/false</em>.
 			La valeur ([b]d[/b]) représentera le message que vous souhaitez afficher en conséquence. Il ne doit cependant pas dépasser 255 caractère au risque d’être tronqué
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -505,7 +505,7 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		'method' => 'key_stats',//Automatically translated
 		0 => 'Récupérer les statistiques d’utilisation de la clé',
 		1 => 'A tout moment vous pouvez consulter le taux d’utilisation de votre clé soi depuis votre panneau de contrôle d’utilisateur soi depuis l’API directement :
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -515,13 +515,13 @@ Vous pouvez également récupérer différents types de configuration avec trois
 		"d" => "",
 		"o" => "json",
 ));[/code]
-Veuilliez notez que la consultation de vos statistiques n’est pas comptabilisé en tant que requête.'
+Veuillez notez que la consultation de vos statistiques n’est pas comptabilisé en tant que requête.'
 	),
 	array(
 		'method' => 'key_options',//Automatically translated
 		0 => 'Récupérer les options disponibles de la clé',
 		1 => 'A tout moment vous pouvez consulter les options disponibles de votre clé soi depuis votre panneau de contrôle d’utilisateur soi depuis l’API directement :
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -531,13 +531,13 @@ Veuilliez notez que la consultation de vos statistiques n’est pas comptabilis�
 		"d" => "",
 		"o" => "json",
 ));[/code]
-Veuilliez notez que la consultation de vos statistiques n’est pas comptabilisé en tant que requête.'
+Veuillez notez que la consultation de vos statistiques n’est pas comptabilisé en tant que requête.'
 	),
 	array(
 		'method' => 'login',//Automatically translated
 		0 => 'Se connecter à votre compte via l’API',
 		1 => 'Vous pouvez vous connecter à votre compte via l’API en utilisant la méthode [i]{METHOD}[/i] sans aucun argument supplémentaire. (Hormis l’email si besoin)
-			[code] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+			[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
 		"k" => "{KB_API_KEY}",
 		"e" => "{KB_USER_EMAIL}",
 		"a" => "{METHOD}",
@@ -547,6 +547,21 @@ Veuilliez notez que la consultation de vos statistiques n’est pas comptabilis�
 		"d" => "",
 		"o" => "json",
 ));[/code]
+[adminkey]Pour les administrateurs le paramètre [b]t[/b] peux être renseigné avec la valeur [i]acp[/i] pour vous connecter directement à votre administration.
+Également, le paramètre [b]d[/b] peut-être utilisé pour choisir le nom du module auquel se connecter directement (update/bots/email/groups/mods ...).
+Toutefois cette option est désactivée par défaut vous pouvez l’activer dans la gestion des clés de l’API.
+Pour se connecter à la gestion des groupes de l’ACP, cela ressemblera à quelque chose comme:
+[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+		"k" => "{KB_API_KEY}",
+		"e" => "{KB_USER_EMAIL}",
+		"a" => "{METHOD}",
+		"m" =>  false,
+		"t" => "acp",
+		"s" => "",
+		"d" => "groups",
+		"o" => "json",
+));[/code]
+[/adminkey]
 [b][color=#BC2A4D]/!\[/color][/b] Cette fonction ignorera le paramètre [b]o[/b] en retournant des données au format HTML !'
 	),
 	// This block will switch the knowledge to the second template column

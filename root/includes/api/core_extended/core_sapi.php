@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3 API Core extend: Static methods
-^>@version $Id: core_sapi.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: core_sapi.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -27,7 +27,7 @@ trait core_sapi
 	protected $CLI_MODE;
 	protected $CLI_ARGV;
 
-	protected $sapi_modes = array(
+	protected static $sapi_modes = array(
 		'aolserver', 'apache',
 		'apache2filter', 'apache2handler',
 		'caudium', /* 'cgi' */ //(until PHP 5.3)
@@ -36,6 +36,10 @@ trait core_sapi
 		'litespeed', 'milter', 'nsapi',
 		'phttpd', 'pi3web', 'roxen',
 		'thttpd', 'tux', 'webjames'
+	);
+
+	protected static $sapi_cli_modes = array(
+		'cli', 'cli-server'
 	);
 
 	protected $cli_params = array(
@@ -79,10 +83,6 @@ trait core_sapi
 		),
 	);
 
-	protected $sapi_cli_modes = array(
-		'cli', 'cli-server'
-	);
-
 	protected $sapi_username;
 	protected $cli_connected;
 	protected $cli_authed;
@@ -109,27 +109,27 @@ trait core_sapi
 	{
 		if(empty($sapi))
 		{
-			$sapi = strtolower(php_sapi_name());
+			$sapi = php_sapi_name();
 		}
-		return (in_array(strtolower($sapi), $this->sapi_cli_modes));
+		return (in_array(strtolower($sapi), self::$sapi_cli_modes));
 	}
 
 	protected function sapi_is($sapi = '')
 	{
 		if(empty($sapi))
 		{
-			$sapi = strtolower(php_sapi_name());
+			$sapi = php_sapi_name();
 		}
-		return (in_array(strtolower($sapi), $this->sapi_modes));
+		return (in_array(strtolower($sapi), self::$sapi_modes));
 	}
 
 	protected function sapi_is_known($sapi = '')
 	{
 		if(empty($sapi))
 		{
-			$sapi = strtolower(php_sapi_name());
+			$sapi = php_sapi_name();
 		}
-		return (in_array(strtolower($sapi), $this->sapi_modes));
+		return (in_array(strtolower($sapi), self::$sapi_modes));
 	}
 
 	/***
@@ -240,7 +240,7 @@ trait core_sapi
 			$command = "/usr/bin/env bash -c 'echo OK'";
 			if (rtrim(shell_exec($command)) !== 'OK') 
 			{
-				trigger_error($this->cli_lang('API_CLI_CANT_INVOKE_BASH'));
+				$this->trigger_error($this->cli_lang('API_CLI_CANT_INVOKE_BASH'));
 				return;
 			}
 			$command = "/usr/bin/env bash -c 'read -s -p \""
@@ -262,7 +262,7 @@ trait core_sapi
 		}
 
 		echo functions\utf8_cleaning($str);
-		
+
 		if($newline_after)
 		{
 			echo PHP_EOL;

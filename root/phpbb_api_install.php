@@ -2,7 +2,7 @@
 /**
 *
 * @package UMIL phpBB API Install file
-* @version $Id: phpbb_api_install.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+* @version $Id: phpbb_api_install.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 Geolim4.com  http://Geolim4.com
 * @bug/function request: http://geolim4.com/tracker.php
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -127,6 +127,12 @@ function submit_status()
 }
 
 $versions = array(
+	'0.0.2' => array(
+		'table_column_add' => array(
+			array(API_KEYS_TABLE, 'sapi_modes', array('VCHAR:255', strtolower(php_sapi_name()))),
+			array(API_KEYS_TABLE, 'key_acp_login', array('UINT:1', 0)),
+		),
+	),
 	'0.0.1' => array(
 		'custom' => 'create_api_group',
 		'permission_add' => array(
@@ -136,6 +142,7 @@ $versions = array(
 			array('a_phpbb_api_keys', true),
 			array('a_phpbb_api_logs', true),
 			array('a_phpbb_api_stats', true),
+
 			//UCP acl
 			array('u_phpbb_api_history', true),
 			array('u_phpbb_api_ignore_day', true),

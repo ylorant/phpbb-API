@@ -2,7 +2,7 @@
 /**
 *
 * @package UCP phpBB API
-^>@version $Id: ucp_phpbb_api.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: ucp_phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -243,10 +243,13 @@ class ucp_phpbb_api
 							$sql_ary['gen_source']				= API_GEN_SOURCE_UCP;
 							$sql_ary['deactivated_methods']		= $config['api_mod_deactivated_methods'];
 							$sql_ary['key_secret_key']			= phpbb_api\functions\generate_api_secret_key();
+							$sql_ary['sapi_modes']				= strtolower(php_sapi_name());
+							$sql_ary['key_acp_login']			= 0;
 
 							$sql = 'INSERT INTO ' . API_KEYS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 							$db->sql_query($sql);
 							phpbb_api\functions\api_add_log('API_LOG_KEY_CREATED', $sql_ary['key_id'], $sql_ary['key_id']);
+
 							//Hate IE...
 							phpbb_api\functions\set_no_cache_headers();
 							redirect($this->u_action . '&amp;key_id=' . ($config['api_mod_ucp_crypt'] ? str_replace('$H$', '', phpbb_hash($sql_ary['key_id'])) : $sql_ary['key_id']));

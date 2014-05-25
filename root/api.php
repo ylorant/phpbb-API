@@ -2,7 +2,7 @@
 /**
 *
 * @package API Gateway interface
-^>@version $Id: api.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -21,7 +21,7 @@ $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 $cli = false;
 
-if(strtolower(php_sapi_name()) == 'cli')
+if(strpos(strtolower(php_sapi_name()), 'cli') === 0)
 {
 	chdir(dirname(__FILE__));
 	$cli = true;
@@ -56,13 +56,13 @@ if (php_is_up_to_date())
 	$user->update_session_page = false;
 
 	//Grab user vars
-	$output			= request_var('o', 'json');		//Intput: json/xml/serialize/ini ...
-	$action			= request_var('a', '-');		//Intput: topic/post/user ...
-	$multibyte		= request_var('m', false);		//Intput: multibyte
+	$output			= request_var('o', 'json');		//Input: json/xml/serialize/ini ...
+	$action			= request_var('a', '-');		//Input: topic/post/user ...
+	$multibyte		= request_var('m', false);		//Input: multibyte
 	$type			= request_var('t', '-', (bool) $multibyte);		//Input: topic_id/post_id/user_id ...
-	$key			= request_var('k', '-');		//Intput: the api key
-	$key_email		= request_var('e', '-');		//Intput: the api email
-	$sql_sorting	= request_var('s', '');			//Intput: start:10/limit:10 ...
+	$key			= request_var('k', '-');		//Input: the api key
+	$key_email		= request_var('e', '-');		//Input: the api email
+	$sql_sorting	= request_var('s', '');			//Input: start:10/limit:10 ...
 	$data			= request_var('d', (isset($_POST['d']) ? (preg_match('/^[0-9]+$/', $_POST['d']) ? 0 : '') : (isset($_GET['d'])) ? (preg_match('/^[0-9]+$/', $_GET['d']) ? 0 : '') : ''), (bool) $multibyte);//Deal with it now!
 	$switch_pvg		= request_var('i', false);
 

@@ -2,7 +2,7 @@
 /**
 *
 * @package language [Standard french] phpBB API
-^>@version $Id: phpbb_api.php v0.0.1 18h35 03/08/2014 Zoddo Exp $
+^>@version $Id: phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -41,7 +41,8 @@ $lang = array_merge($lang, array(
 	'API_GENERATE_TIME'			=> 'Page générée en %s secondes.',
 	'API_LIFETIME'				=> 'A vie',
 	'API_ITEM_KEYWORD'			=> 'objet',//Should uppercase without special chars unless underscore: _
-	'API_LOGIN_WAIT'			=> 'Connexion, veuillez patienter …',
+	'API_LOGIN_WAIT'			=> 'Connexion à votre compte, veuillez patienter …',
+	'API_LOGIN_ACP_WAIT'		=> 'Connexion à votre ACP, veuillez patienter …',
 	'API_NO_RECORD'				=> 'Aucun enregistrement trouvé',
 	'API_INCORRECT_DATA'		=> 'Données incorrectes envoyées',
 	'API_SUCCESS'				=> 'Opération terminée avec succès',
@@ -154,7 +155,29 @@ you will be disconnected from the current session.',
 		'userid'			=> 'Identifiant utilisateur',
 		'email'				=> 'E-mail',
 	),
-
+	'API_SAPI_MODE_CURRENT'	=> 'Mode actuel',
+	'API_SAPI_MODES'		=> array(
+		'aolserver' => "Serveur AOL (AOLSERVER)", 
+		'apache' => 'Serveur Apache (apache)',
+		//'apache2filter' => '', 
+		'apache2handler' => 'Apache: Contexte utilisateur (apache2handler)',
+		//'caudium' => '',
+		'cgi-fcgi' => 'Interface de passerelle commune (CGI-FCGI)',
+		'cli' => 'Interface ligne de commande (CLI)',
+		'cli-server' => 'Serveur web interne (CLI-SERVER)',
+		//'continuity',
+		//'embed' => '',
+		'isapi' => 'ISS (ISAPI)', 
+		'litespeed' => 'Litespeed (LSAPI)',
+		// 'milter' => '',
+		// 'nsapi' => '',
+		// 'phttpd' => '',
+		// 'pi3web' => '',
+		// 'roxen' => '',
+		// 'thttpd' => '',
+		// 'tux' => '',
+		// 'webjames' => ''
+	),
 	'API_UNAUTHORIZED'			=> 'Clé non autorisée !',
 	'API_UNAUTHORIZED_USER'		=> 'Le compte liée à cette clé a été supprimée.',
 	'API_UNAUTHORIZED_AUTH'		=> 'Vous n’avez pas les permissions requises',
@@ -180,6 +203,7 @@ you will be disconnected from the current session.',
 	'API_ERROR_METHOD_DISPLAY'		=> 'Format de sortie « %s » non trouvé !',
 	'API_ERROR_METHOD_REQUEST'		=> 'Impossible de procéder à la requête en mode %s',
 	'API_ERROR_DISABLED'			=> 'L’API a été désactivé par un administrateur.',
+	'API_ERROR_NO_ACP_LOGIN'		=> 'Cette clé n’est pas autorisé à vous connecter directement à l’ACP.',
 	'API_ERROR_NO_SSL'				=> 'La requête doit être ré-adressé en utilisant le protocole SSL',
 	'API_ERROR_NO_METHOD'			=> 'Aucune méthode sélectionnée !',
 	'API_ERROR_NO_SUBMETHOD'		=> 'Aucune sous-méthode sélectionnée !',
@@ -187,6 +211,7 @@ you will be disconnected from the current session.',
 	'API_ERROR_PER_MONTH'			=> 'Vous avez dépassé votre quota maximum de requêtes par mois (%s)',
 	'API_ERROR_PER_WEEK'			=> 'Vous avez dépassé votre quota maximum de requêtes par semaine (%s)',
 	'API_ERROR_PHP_VERSION'			=> 'L’API requiert PHP %1$s ou ultérieur, votre version de PHP est la %2$s',
+	'API_ERROR_SAPI'				=> 'Mode SAPI non autorisé : "%s" ! Cette est due à une mauvaise configuration de votre clé, contactez un administrateur pour plus d’informations.',
 	'API_ERROR_TYPE'				=> 'Colonne SQL « %s » inconnue dans la table « %s »',
 
 	'API_FATAL_ERROR'				=> 'Erreur fatale',

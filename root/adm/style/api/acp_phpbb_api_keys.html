@@ -189,7 +189,14 @@
 						<dt><label for="deactivated_methods_{api_keys.KEY_ID}">{L_ACP_PHPBB_API_DEACTIVATED_METHODS}:</label><br />{L_ACP_PHPBB_API_DEACTIVATED_METHODS_EXP}</dt>
 						<dd>
 							<label><select multiple="multiple" size="8" name="key_id[{api_keys.KEY_ID}][deactivated_methods][]" id="deactivated_methods_{api_keys.KEY_ID}">{api_keys.DEACTIVATED_METHODS}</select></label>
-							<br />[&nbsp;<a href="javascript:reset_selected('{api_keys.KEY_ID}')">{L_RESET}</a>&nbsp;]
+							<br />[&nbsp;<a href="javascript:reset_selected('deactivated_methods_{api_keys.KEY_ID}')">{L_RESET}</a>&nbsp;]
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="sapi_modes_{api_keys.KEY_ID}">{L_ACP_PHPBB_API_SAPI_MODES}:</label><br />{L_ACP_PHPBB_API_SAPI_MODES_EXP}</dt>
+						<dd>
+							<label><select multiple="multiple" size="8" name="key_id[{api_keys.KEY_ID}][sapi_modes][]" id="sapi_modes_{api_keys.KEY_ID}">{api_keys.SAPI_MODES}</select></label>
+							<br />[&nbsp;<a href="javascript:reset_selected('sapi_modes_{api_keys.KEY_ID}')">{L_RESET}</a>&nbsp;]
 						</dd>
 					</dl>
 					<dl>
@@ -228,6 +235,13 @@
 						<dd>
 							<label><input type="radio" class="radio" name="key_id[{api_keys.KEY_ID}][force_post]" value="1"<!-- IF api_keys.FORCE_POST --> checked="checked" id="key_id_force_post_{api_keys.KEY_ID}"<!-- ENDIF --> /> {L_YES}</label>
 							<label><input type="radio" class="radio" name="key_id[{api_keys.KEY_ID}][force_post]" value="0"<!-- IF not api_keys.FORCE_POST --> checked="checked" id="key_id_force_post_{api_keys.KEY_ID}"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="key_id_key_acp_login_{api_keys.KEY_ID}">{L_ACP_PHPBB_API_KEY_ACP_LOGIN}:</label></dt>
+						<dd>
+							<label><input type="radio" class="radio" name="key_id[{api_keys.KEY_ID}][key_acp_login]" value="1"<!-- IF api_keys.KEY_ACP_LOGIN --> checked="checked" id="key_id_key_acp_login_{api_keys.KEY_ID}"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="key_id[{api_keys.KEY_ID}][key_acp_login]" value="0"<!-- IF not api_keys.KEY_ACP_LOGIN --> checked="checked" id="key_id_key_acp_login_{api_keys.KEY_ID}"<!-- ENDIF --> /> {L_NO}</label>
 						</dd>
 					</dl>
 					<dl>
@@ -349,7 +363,7 @@
 		}
 	}
 	function reset_selected(id){
-		$("#deactivated_methods_" + id).children('option').each(function(index) {
+		$("#" + id).children('option').each(function(index) {
 			this.selected = false;
 		});
 	}

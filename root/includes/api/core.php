@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3 API Core
-^>@version $Id: core.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: core.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -37,7 +37,9 @@ class api implements arrayaccess
 	public $api_type = '';
 	public $api_action = '';
 	public $api_secret_key = '';
+	public $api_acp_path = 'adm/';
 	public $api_auto_consts = true;
+	public $api_acp_logged_in = false;
 	public $api_action_translated = '';
 	public $api_subaction_translated = '';
 	public $api_acls = array();
@@ -271,10 +273,21 @@ class api implements arrayaccess
 				}
 
 				$username = $this->sapi_prompt($this->cli_lang('API_CLI_LOGIN_AS'));
+				$like_expression = '';
+
+				foreach(self::$sapi_cli_modes AS $cli_modes)
+				{
+					if($like_expression)
+					{
+						$like_expression .= ' OR ';
+					}
+					$like_expression .= ' sapi_modes ' . $this->db->sql_like_expression($this->db->any_char . $cli_modes . $this->db->any_char);
+				}
+
 				$sql = 'SELECT u.user_id, u.user_password, k.key_id
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . API_KEYS_TABLE . ' k
-						ON(u.user_id = k.user_id AND ' . $this->db->sql_in_set('sapi_mode', $this->sapi_cli_modes) . ')
+						ON(u.user_id = k.user_id AND (' . $like_expression . '))
 					WHERE username_clean = \'' . $this->db->sql_escape(utf8_clean_string($username)) . '\'';
 				$result = $this->db->sql_query($sql);
 				$row = $this->db->sql_fetchrow($result);
@@ -350,9 +363,14 @@ class api implements arrayaccess
 			header('X-Powered-By: phpBB API/' . API_VERSION);
 		}
 
+		if($row['key_type'] == API_TYPE_ADMIN && $row['key_acp_login'])
+		{
+			$this->api_acp_logged_in = true;
+		}
+
 		//Here we re-auth the current user because we are authed by the API KEY
 		$this->user->update_session_page = false;
-		$this->user->session_create($row['user_id'],/* (($row['key_type'] == API_TYPE_ADMIN) ? true : */ false /*)*/, false, false);
+		$this->user->session_create($row['user_id'], $this->api_acp_logged_in, false, false);
 		$this->auth->acl($this->user->data);
 		$this->user->setup();
 
@@ -379,7 +397,7 @@ class api implements arrayaccess
 		}
 
 		//Check for SSL status
-		if (!empty($this->config['api_mod_force_ssl']) && !is_ssl_request())
+		if (!empty($this->config['api_mod_force_ssl']) && !functions\is_ssl_request())
 		{
 			$this->trigger_error('API_ERROR_NO_SSL', E_USER_WARNING);
 		}
@@ -415,24 +433,33 @@ class api implements arrayaccess
 	****/
 	protected function check_key_options($row)
 	{
+		// Check ACL
 		if (!$this->auth->acl_get('u_phpbb_api_use'))
 		{
 			$this->trigger_error('NOT_AUTHORISED', E_USER_WARNING);
 		}
 
+		// Check key status
 		if ($row['key_status'] == API_STATUS_SUSPENDED)//Most probably admin decision
 		{
 			functions\api_add_log('API_LOG_BAD_AUTH_SUSPENDED', $this->key_id);
 			$this->trigger_error($this->user->lang['API_SUSPENDED'], E_USER_WARNING);
 		}
-
-		if ($row['key_status'] == API_STATUS_DEACTIVATED)//Most probably user regeneration
+		else if ($row['key_status'] == API_STATUS_DEACTIVATED)//Most probably user regeneration
 		{
 			functions\api_add_log('API_LOG_BAD_AUTH_DEACTIVATED', $this->key_id);
 			$this->trigger_error($this->user->lang['API_DEACTIVATED'], E_USER_WARNING);
 		}
 
+		// Check SAPI mode
+		if (!in_array(strtolower(php_sapi_name()), explode(',', $row['sapi_modes'])))
+		{
+			functions\api_add_log('API_LOG_BAD_AUTH_SAPI', $this->key_id, strtolower(php_sapi_name()));
+			$this->trigger_error($this->user->lang('API_ERROR_SAPI', strtolower(php_sapi_name())), E_USER_WARNING);
+		}
+
 		$counter = functions\sort_queries_history($row['queries_history'], $row['key_id']);
+		// Check daily counter
 		if (!$this->auth->acl_get('u_phpbb_api_ignore_day') && $row['max_queries_per_day'] && ($counter['queries_per_day'] > ($row['max_queries_per_day'] - 1)))
 		{
 			$this->trigger_error($this->user->lang('API_ERROR_PER_DAY', $row['max_queries_per_day']), E_USER_WARNING);
@@ -447,6 +474,7 @@ class api implements arrayaccess
 			$this->api_key_stats['daily_quota'] = $counter['queries_per_day'] . '/' . $this->user->lang['UCP_PHPBB_API_INFINITE_SYMBOL'];
 		}
 
+		// Check weekly counter
 		if (!$this->auth->acl_get('u_phpbb_api_ignore_week') && $row['max_queries_per_week'] && ($counter['queries_per_week'] > ($row['max_queries_per_week'] - 1)))
 		{
 			$this->trigger_error($this->user->lang('API_ERROR_PER_WEEK', $row['max_queries_per_week']), E_USER_WARNING);
@@ -461,6 +489,7 @@ class api implements arrayaccess
 			$this->api_key_stats['weekly_quota'] = $counter['max_queries_per_week'] . '/' . $this->user->lang['UCP_PHPBB_API_INFINITE_SYMBOL'];
 		}
 
+		// Check monthly counter
 		if (!$this->auth->acl_get('u_phpbb_api_ignore_month') && $row['max_queries_per_month'] && ($counter['queries_per_month'] > ($row['max_queries_per_month'] - 1)))
 		{
 			$this->trigger_error($this->user->lang('API_ERROR_PER_MONTH', $row['max_queries_per_month']), E_USER_WARNING);
@@ -475,6 +504,7 @@ class api implements arrayaccess
 			$this->api_key_stats['monthly_quota'] = $counter['queries_per_month'] . '/' . $this->user->lang['UCP_PHPBB_API_INFINITE_SYMBOL'];
 		}
 
+		// Check total counter
 		if (!$this->auth->acl_get('u_phpbb_api_ignore_max') && $row['max_queries'] && ($row['queries'] > ($row['max_queries'] - 1)))
 		{
 			functions\api_add_log('API_LOG_BAD_AUTH_OUT_OF_QUOTA', $row['key_id']);
@@ -490,6 +520,7 @@ class api implements arrayaccess
 			$this->api_key_stats['total_quota'] = $row['queries'] . '/' . $this->user->lang['UCP_PHPBB_API_INFINITE_SYMBOL'];
 		}
 
+		// Check expiration date
 		if ($row['expire_time'] && ($this->time > $row['expire_time']))
 		{
 			functions\api_add_log('API_LOG_BAD_AUTH_OUDATED', $row['key_id']);
@@ -504,11 +535,13 @@ class api implements arrayaccess
 			$this->api_key_stats['days_left'] = $this->user->lang['API_LIFETIME'];
 		}
 
+		// Check request mode
 		if ($row['force_post'] && !is_post_request() && !$this->CLI_MODE)
 		{
 			$this->trigger_error($this->user->lang('API_ERROR_METHOD_REQUEST', get_request_method()), E_USER_WARNING);
 		}
 
+		// Check key type
 		if ($row['email_auth'] || $row['key_type'] == API_TYPE_ADMIN)
 		{
 			global $key_email, $switch_pvg;
@@ -567,6 +600,7 @@ class api implements arrayaccess
 			}
 		}
 
+		// Check allowed ips
 		if ($row['key_ips'])
 		{
 			$allowed_ips = explode("\n", $row['key_ips']);
@@ -582,6 +616,7 @@ class api implements arrayaccess
 		$this->api_secret_key = $row['key_secret_key'];
 		$this->api_type = $row['key_type'];
 		$this->key_options = $row;
+
 
 		//Merge hooks method types
 		foreach ($this->hooks AS $hook)
@@ -618,7 +653,7 @@ class api implements arrayaccess
 			$hostname = '';
 			if ($site_ip)
 			{
-				foreach ($iplist as $ip)
+				foreach ($iplist AS $ip)
 				{
 					if (preg_match('#^' . str_replace('\*', '.*?', preg_quote($site_ip, '#')) . '$#i', $ip))
 					{
@@ -1545,7 +1580,7 @@ class api implements arrayaccess
 			//Total IP ban recorded
 			$sql = 'SELECT COUNT(attempt_ip) AS total
 				FROM ' . API_LOGIN_ATTEMPTS . '
-				WHERE attempt_time <= BETWEEN ' . $begin_day_time . ' AND ' . $end_day_time;
+				WHERE attempt_time BETWEEN ' . $begin_day_time . ' AND ' . $end_day_time;
 			$result = $this->db->sql_query($sql);
 			$assign_vars['TOTAL_BANNED_IPS'] = (int) $this->db->sql_fetchfield('total');
 			$this->db->sql_freeresult($result);

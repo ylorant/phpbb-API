@@ -2,7 +2,7 @@
 /**
 *
 * @package API functions
-^>@version $Id: functions.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: functions.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -942,7 +942,7 @@ function get_api_methods($include_hooks = true, $return_selector = true, $select
 
 	if (!sizeof($methods))
 	{
-		if (!class_exists('api'))
+		if (!class_exists('\phpbb_api\api'))
 		{
 			include($phpbb_root_path . 'includes/api/core.' . $phpEx);
 		}
@@ -997,11 +997,51 @@ function get_api_methods($include_hooks = true, $return_selector = true, $select
 
 		foreach ($methods AS $method_name => $method_real_name)
 		{
-			$selector .= '<option value="' . $method_name . '"' . (in_array($method_name, $selected_items) ? 'selected="selected"': '') . '' . ($boldify_admin_keys && empty($privileges[$method_name][API_TYPE_USER]) ? ' style="font-weight: bold;"' : '') . '>' . $method_real_name . '</option>';
+			$selector .= '<option value="' . $method_name . '"' . (in_array($method_name, $selected_items) ? ' selected="selected"': '') . ($boldify_admin_keys && empty($privileges[$method_name][API_TYPE_USER]) ? ' style="font-weight: bold;"' : '') . '>' . $method_real_name . '</option>';
 		}
 		return $selector;
 	}
 	return $methods;
+}
+
+/****
+* get_sapi_modes()
+* Get API sapi modes without instantiate it.
+* @multiple mixed params
+****/
+function get_sapi_modes($return_selector, $selected_items = array())
+{
+	global $phpbb_root_path, $phpEx, $user;
+	static $sapi_modes = array();
+	$privileges = array();
+
+	if (!sizeof($sapi_modes))
+	{
+		if (!class_exists('\phpbb_api\api'))
+		{
+			include($phpbb_root_path . 'includes/api/core.' . $phpEx);
+		}
+
+		$sapi_modes = \phpbb_api\api::STC_get_sapi_modes();
+	}
+
+	if ($return_selector)
+	{
+		$selector = '';
+		foreach ($sapi_modes AS $sapi_mode)
+		{
+			$style = '';
+			$sapi_full_name = (isset($user->lang['API_SAPI_MODES'][$sapi_mode]) ? $user->lang['API_SAPI_MODES'][$sapi_mode] : $sapi_mode);
+			if (strtolower(php_sapi_name()) == $sapi_mode)
+			{
+				$style = ' style="font-weight: bold;"';
+				$sapi_full_name .= " ({$user->lang['API_SAPI_MODE_CURRENT']})";
+			}
+			$selector .= '<option value="' . $sapi_mode . '"' . (in_array($sapi_mode, $selected_items) ? ' selected="selected"': '') . $style . '>' . $sapi_full_name . '</option>';
+		}
+		return $selector;
+	}
+	return $sapi_modes;
 }
 
 /****

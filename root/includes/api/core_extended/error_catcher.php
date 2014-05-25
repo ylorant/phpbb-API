@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3 API Core extend: Error catcher
-^>@version $Id: core_catchable_error.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: core_catchable_error.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -235,7 +235,7 @@ function fatal_api_error_handler($buffer)
 	if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_RECOVERABLE_ERROR)))
 	{
 		//Even in case of fatal error, $phpbb_root_path, $user, $config, $api_bench_start are still available grab them now!!
-		global $phpbb_root_path, $user, $config, $api_bench_start;
+		global $phpbb_root_path, $user, $config, $api_bench_start, $api;
 
 		//Here we do not listen at all
 		error_reporting(0);
@@ -271,7 +271,13 @@ function fatal_api_error_handler($buffer)
 				'ERROR_TEXT_EXP'		=> isset($user->lang['API_FATAL_ERROR_TEXT_EXP']) ? $user->lang('API_FATAL_ERROR_TEXT_EXP', API_VERSION) : $api_fatal_error_text_exp,
 				'API_GENERATE_TIME'		=> isset($user->lang['API_GENERATE_TIME']) ? $user->lang('API_GENERATE_TIME', round(apiFN\api_bench_end($api_bench_start), 4, PHP_ROUND_HALF_UP)) : 'Page generated in ' . round(apiFN\api_bench_end($api_bench_start), 4, PHP_ROUND_HALF_UP) . ' seconds.',
 			);
-
+			if ($api->api_type != API_TYPE_ADMIN)
+			{
+				$vars['ERROR_LINE'] = str_repeat('*', strlen($vars['ERROR_LINE']));
+				$vars['ERROR_FILE'] = str_repeat('*', strlen($vars['ERROR_FILE']));
+				$vars['ERROR_SERVER'] = str_repeat('*', strlen($vars['ERROR_SERVER']));
+				$vars['ERROR_PHP_VERSION'] = str_repeat('*', strlen($vars['ERROR_PHP_VERSION']));
+			}
 			$buffer_handled = @preg_replace_callback('#\{([A-Z0-9_]*)\}#', 
 				function($match) use ($vars, $user)
 				{
@@ -317,16 +323,16 @@ function fatal_api_error_handler($buffer)
 					'msg' => e_user_level($error['type'], true) . ' ' . $error['message'],
 					'errno' => $error['type'],
 				);
-				if ($api->backtrace)
+				if ($api->backtrace && $api->api_type == API_TYPE_ADMIN)
 				{
-					$debug_backtrace = debug_backtrace();
+					$debug_backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
 					$debug = array();
 					$i = 0;//Used to inject args var correctly...
 					// We skip the first one, because it only shows this file/function
 					unset($debug_backtrace[0]);
 					$debug_backtrace = @array_reverse($debug_backtrace);
 
-					foreach ($debug_backtrace as $trace)
+					foreach ($debug_backtrace AS $trace)
 					{
 						if (isset($trace['function']) && $trace['function'] == 'api_error_handler')
 						{
@@ -349,7 +355,14 @@ function fatal_api_error_handler($buffer)
 					}
 					if (!empty($debug))
 					{
-						$result['backtrace'] = $debug;
+						$result['backtrace'] = error_get_last();
+					}
+					else
+					{
+						$debug = error_get_last();
+						$debug['message'] =  e_user_level($error['type'], true) . " {$debug['message']}";
+						$debug['file'] = (isset($debug['file']) ? htmlspecialchars(phpbb_filter_root_path($debug['file'])) : "-");
+						$result['backtrace'] = array(0 => $debug);
 					}
 
 					$result['status'] = '503 Service Unavailable';
@@ -376,6 +389,7 @@ function fatal_api_error_handler($buffer)
 	}
 	return $buffer;
 }
+
 //Something went very wrong
 //At this moment we cannot recover nothing anymore, we need to show a last message to the user :'(
 function unrecoverable_fatal_error($message, $return = false)

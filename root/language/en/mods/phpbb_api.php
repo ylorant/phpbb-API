@@ -2,7 +2,7 @@
 /**
 *
 * @package language [English] phpBB API
-^>@version $Id: phpbb_api.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -41,7 +41,8 @@ $lang = array_merge($lang, array(
 	'API_GENERATE_TIME'			=> 'Page generated in %s seconds.',
 	'API_LIFETIME'				=> 'Lifetime',
 	'API_ITEM_KEYWORD'			=> 'item',//Should uppercase without special chars unless underscore: _
-	'API_LOGIN_WAIT'			=> 'Logging in, please wait…',
+	'API_LOGIN_WAIT'			=> 'Logging to your account, please wait…',
+	'API_LOGIN_ACP_WAIT'		=> 'Logging to your ACP, please wait…',
 	'API_NO_RECORD'				=> 'Any record found',
 	'API_INCORRECT_DATA'		=> 'Incorrect data send',
 	'API_SUCCESS'				=> 'Operation completed successfully',
@@ -154,7 +155,29 @@ you will be disconnected from the current session.',
 		'userid'			=> 'User identifier',
 		'email'				=> 'Email',
 	),
-
+	'API_SAPI_MODE_CURRENT'	=> 'Current mode',
+	'API_SAPI_MODES'		=> array(
+		'aolserver' => "Serveur AOL (AOLSERVER)", 
+		'apache' => 'Serveur Apache (apache)',
+		//'apache2filter' => '', 
+		'apache2handler' => 'Apache: Contexte utilisateur (apache2handler)',
+		//'caudium' => '',
+		'cgi-fcgi' => 'Interface de passerelle commune (CGI-FCGI)',
+		'cli' => 'Interface ligne de commande (CLI)',
+		'cli-server' => 'Serveur web interne (CLI-SERVER)',
+		//'continuity',
+		//'embed' => '',
+		'isapi' => 'ISS (ISAPI)', 
+		'litespeed' => 'Litespeed (LSAPI)',
+		// 'milter' => '',
+		// 'nsapi' => '',
+		// 'phttpd' => '',
+		// 'pi3web' => '',
+		// 'roxen' => '',
+		// 'thttpd' => '',
+		// 'tux' => '',
+		// 'webjames' => ''
+	),
 	'API_UNAUTHORIZED'			=> 'Unallowed API key!',
 	'API_UNAUTHORIZED_USER'		=> 'The account attached to this key has been permanently deleted.',
 	'API_UNAUTHORIZED_AUTH'		=> 'You do not have the required permissions.',
@@ -180,6 +203,7 @@ you will be disconnected from the current session.',
 	'API_ERROR_METHOD_DISPLAY'		=> 'Output format « %s » not found !',
 	'API_ERROR_METHOD_REQUEST'		=> 'Cannot proceed to the request as in %s mode',
 	'API_ERROR_DISABLED'			=> 'The API has been disabled by an administrator.',
+	'API_ERROR_NO_ACP_LOGIN'		=> 'This key is not allowed to log you directly in the ACP.',
 	'API_ERROR_NO_SSL'				=> 'The request must be re-addressed using the SSL protocol',
 	'API_ERROR_NO_METHOD'			=> 'No method selected!',
 	'API_ERROR_NO_SUBMETHOD'		=> 'No sub-method selected!',
@@ -187,6 +211,7 @@ you will be disconnected from the current session.',
 	'API_ERROR_PER_MONTH'			=> 'You have exceeded your maximum quota of queries per month (%s)',
 	'API_ERROR_PER_WEEK'			=> 'You have exceeded your maximum quota of queries per week (%s)',
 	'API_ERROR_PHP_VERSION'			=> 'The API require PHP %1$s or later, your PHP version is %2$s',
+	'API_ERROR_SAPI'				=> 'Unallowed SAPI mode: "%s"! This error is due to a misconfiguration of your key, contact an administrator for more informations.',
 	'API_ERROR_TYPE'				=> 'Unknown SQL column "%s" in table "%s"',
 
 	'API_FATAL_ERROR'				=> 'Fatal error',

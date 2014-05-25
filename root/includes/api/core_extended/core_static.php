@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3 API Core extend: Static methods
-^>@version $Id: core_static.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: core_static.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -40,5 +40,10 @@ trait core_static
 			'filename'		=> self::$api_crypto_filename,
 			'secret_key'	=> $user->lang['API_CRYPTO_PRIVATE'],
 		);
+	}
+
+	static public function STC_get_sapi_modes()
+	{
+		return self::$sapi_modes;
 	}
 }

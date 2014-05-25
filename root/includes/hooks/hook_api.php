@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @package hook hook_pwd_gen.php
-* @version $Id: hook_pwd_gen.php v1.1.0 19:15 20/04/2013 Geolim4 Exp $
+* @package API hook
+* @version $Id: hook_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 Geolim4.com http://geolim4.com
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

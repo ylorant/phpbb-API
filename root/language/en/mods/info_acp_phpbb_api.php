@@ -2,7 +2,7 @@
 /**
 *
 * @package language [English] phpBB API
-^>@version $Id: info_acp_phpbb_api.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: info_acp_phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -111,6 +111,7 @@ $lang = array_merge($lang, array(
 	'API_LOG_BAD_AUTH_OUT_OF_QUOTA'	=> '<strong>Authentication denied:</strong><br />» Reached quota' . $api_lang_suffix,
 	'API_LOG_BAD_AUTH_DEACTIVATED'	=> '<strong>Authentication denied:</strong><br />» Deactivated key' . $api_lang_suffix,
 	'API_LOG_BAD_AUTH_SUSPENDED'	=> '<strong>Authentication denied:</strong><br />» Suspended key' . $api_lang_suffix,
+	'API_LOG_BAD_AUTH_SAPI'			=> '<strong>Authentication denied:</strong><br />» Unallowed SAPI mode: %s' . $api_lang_suffix,
 	'API_LOG_BAN_EMAIL'				=> '<strong>Banned email</strong><br />» %s' . $api_lang_suffix,
 	'API_LOG_BAN_IP'				=> '<strong>Banned IP</strong><br />» %s' . $api_lang_suffix,
 	'API_LOG_BANNED_IP'				=> '<strong>Authentication denied:</strong><br />» Banned IP (%s attempts)' . $api_lang_suffix,
@@ -174,6 +175,9 @@ $lang = array_merge($lang, array(
 	'ACP_PHPBB_API_DEACTIVATED_METHODS'	=> 'Deactivated methods',
 	'ACP_PHPBB_API_DEACTIVATED_METHODS_EXP'	=> 'You can deactivate multiple methods in one go using the appropriate combination of mouse and keyboard for your computer and browser.
 											<br />Please note that some methods are already administrator`s reserved. Check out the %1$smanual%2$s for more information.',
+	'ACP_PHPBB_API_SAPI_MODES'			=> 'SAPI modes',
+	'ACP_PHPBB_API_SAPI_MODES_EXP'		=> 'You can choose the SAPI context that the key will be allowed to be used for.',
+
 	'ACP_PHPBB_API_DEFAULT_SETTINGS'	=> 'Default settings',
 	'ACP_PHPBB_API_DELETE'				=> 'Delete',
 	'ACP_PHPBB_API_DELETED'				=> 'The key <strong>%s</strong> has been successfully deleted!',
@@ -211,6 +215,7 @@ $lang = array_merge($lang, array(
 												<br />Please note that this setting is forced for "Administrator" key type.',
 	'ACP_PHPBB_API_KEY_FORCE_POST'			=> 'Force POST mode',
 	'ACP_PHPBB_API_KEY_FORCE_POST_EXP'		=> 'This will block the key to be used as non-POST mode',
+	'ACP_PHPBB_API_KEY_ACP_LOGIN'			=> 'Allow ACP connexion using <em>login</em> method',
 	'ACP_PHPBB_API_KEY_HISTORY'				=> 'Brute history',
 	'ACP_PHPBB_API_KEY_HISTORY_DET'			=> 'Detailed history',
 	'ACP_PHPBB_API_KEY_INDEX'				=> 'Keys index',

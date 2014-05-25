@@ -2,7 +2,7 @@
 /**
 *
 * @package ACP phpBB API
-^>@version $Id: acp_phpbb_api.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: acp_phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -138,6 +138,7 @@ class acp_phpbb_api
 								$api_mod_db_password = str_replace('\'', '\\\'', request_var('api_mod_db_password', ''));//We cannot trim a password...
 								$db_test = new $sql_db();
 								require($phpbb_root_path . 'config.' . $phpEx);
+								unset($dbuser, $dbpasswd);
 
 								// Connect to DB
 								$db_test->sql_return_on_error(true);
@@ -467,6 +468,7 @@ class acp_phpbb_api
 									'KEY_STATUS'			=> $key_status,
 									'U_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=api_keys&amp;field=key_id_user_' . $troll_key . '&amp;select_single=true'),
 									'DEACTIVATED_METHODS' 	=> phpbb_api\functions\get_api_methods(true, true),
+									'SAPI_MODES'			=> phpbb_api\functions\get_sapi_modes(true, array(php_sapi_name())),
 								));
 							}
 							else
@@ -524,7 +526,10 @@ class acp_phpbb_api
 									$sql_ary['key_ips']					= (isset($key_values['key_ips']) ? $key_values['key_ips'] : '');
 									$sql_ary['gen_source']				= API_GEN_SOURCE_ACP;
 									$sql_ary['deactivated_methods']		= (isset($key_values['deactivated_methods']) ? (is_array($key_values['deactivated_methods']) ? implode(',', $key_values['deactivated_methods']) : '') : '');
+									$sql_ary['sapi_modes']				= (isset($key_values['sapi_modes']) ? (is_array($key_values['sapi_modes']) ? implode(',', $key_values['sapi_modes']) : '') : '');
 									$sql_ary['key_secret_key']			= phpbb_api\functions\generate_api_secret_key();
+									$sql_ary['key_acp_login']			= (int) (isset($key_values['key_acp_login']) ? $key_values['key_acp_login'] : 0);
+
 									//For now, $key_values['user_id'] isn't really an user_id but an username (not clean)
 									if (isset($key_values['user_id']))
 									{
@@ -661,6 +666,9 @@ class acp_phpbb_api
 										$sql_ary['key_ips_type']			= (int) (isset($key_values['key_ips_type']) ? $key_values['key_ips_type'] : API_IP_ALLOWED);
 										$sql_ary['key_ips']					= (isset($key_values['key_ips']) ? $key_values['key_ips'] : '');
 										$sql_ary['deactivated_methods']		= (isset($key_values['deactivated_methods']) ? (is_array($key_values['deactivated_methods']) ? implode(',', $key_values['deactivated_methods']) : '') : '');
+										$sql_ary['sapi_modes']				= (isset($key_values['sapi_modes']) ? (is_array($key_values['sapi_modes']) ? implode(',', $key_values['sapi_modes']) : '') : '');
+										$sql_ary['key_acp_login']			= (int) (isset($key_values['key_acp_login']) ? $key_values['key_acp_login'] : 0);
+
 										//$sql_ary['gen_source']				= API_GEN_SOURCE_ACP; //If we edit the key, we do not modify that value.
 										//For now, $key_values['user_id'] isn't really an user_id but an username (not clean)
 										if (isset($key_values['user_id']))
@@ -737,6 +745,7 @@ class acp_phpbb_api
 										$row['username_full'] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], false, $profile_url);
 										$row['expire_time'] = $row['expire_time'] ? $user->format_date($row['expire_time']) : 0;
 										$row['deactivated_methods'] = phpbb_api\functions\get_api_methods(true, true, explode(',', $row['deactivated_methods']));
+										$row['sapi_modes'] = phpbb_api\functions\get_sapi_modes(true, explode(',', $row['sapi_modes']));
 										$template->assign_block_vars('api_keys', array_change_key_case($row, CASE_UPPER));
 									}
 									$db->sql_freeresult($result);

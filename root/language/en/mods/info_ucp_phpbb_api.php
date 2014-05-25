@@ -2,7 +2,7 @@
 /**
 *
 * @package language [English] phpBB API
-^>@version $Id: info_ucp_phpbb_api.php v0.0.1 13h37 03/08/2014 Geolim4 Exp $
+^>@version $Id: info_ucp_phpbb_api.php v0.0.2 04h40 05/25/2014 Geolim4 Exp $
 * @copyright (c) 2012 - 2014 Geolim4.com http://geolim4.com
 * @bug/function request: http://geolim4.com/tracker
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -547,6 +547,21 @@ Please note that viewing your statistics from the API will [b]not[/b] be deducte
 		"d" => "",
 		"o" => "json",
 ));[/code]
+[adminkey]For administrators, the [b]t[/b] parameter can be filled with the [i]acp[/i] value to connect your to the ACP. 
+Also, the [b]d[/b] parameter can be used to select the module name to connect directly (update/bots/email/groups/mods ...).
+However this feature is default disabled, you can enable it in the keys management of the API.
+To connect to the group management of the ACP, it will look something like:
+[code=php] curl_setopt($handle, CURLOPT_POSTFIELDS, array(
+		"k" => "{KB_API_KEY}",
+		"e" => "{KB_USER_EMAIL}",
+		"a" => "{METHOD}",
+		"m" =>  false,
+		"t" => "acp",
+		"s" => "",
+		"d" => "",
+		"o" => "json",
+));[/code]
+[/adminkey]
 [b][color=#BC2A4D]/!\[/color][/b] This function will violate the output format ([b]o[/b]) as returning HTML data!'
 	),
 	// This block will switch the knowledge to the second template column
