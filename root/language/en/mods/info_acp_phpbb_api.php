@@ -211,7 +211,7 @@ $lang = array_merge($lang, array(
 												<br />Please note that this setting is forced for "Administrator" key type.',
 	'ACP_PHPBB_API_KEY_FORCE_POST'			=> 'Force POST mode',
 	'ACP_PHPBB_API_KEY_FORCE_POST_EXP'		=> 'This will block the key to be used as non-POST mode',
-	'ACP_PHPBB_API_KEY_HISTORY'				=> 'Brute history',
+	'ACP_PHPBB_API_KEY_HISTORY'				=> 'Raw history',
 	'ACP_PHPBB_API_KEY_HISTORY_DET'			=> 'Detailed history',
 	'ACP_PHPBB_API_KEY_INDEX'				=> 'Keys index',
 	'ACP_PHPBB_API_KEY_INVALID_TIME'		=> 'Invalid expiration date entered for the key <strong>%s</strong>, back to default value',
